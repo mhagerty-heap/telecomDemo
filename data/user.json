@@ -1,0 +1,99 @@
+{
+  "accountId": "NX-00291847",
+  "name": "Alex Johnson",
+  "email": "demo@nexusmobile.com",
+  "phone": "(555) 867-5309",
+  "memberSince": "2021-03-15",
+  "address": {
+    "street": "742 Evergreen Terrace",
+    "city": "Springfield",
+    "state": "IL",
+    "zip": "62701"
+  },
+  "plan": {
+    "id": "unlimited",
+    "name": "Unlimited",
+    "price": 55,
+    "renewalDate": "2025-07-15"
+  },
+  "billing": {
+    "balance": 55.00,
+    "dueDate": "2025-07-08",
+    "autopay": false,
+    "lastPayment": {
+      "amount": 55.00,
+      "date": "2025-06-08"
+    },
+    "paymentMethod": {
+      "type": "Visa",
+      "last4": "4242"
+    }
+  },
+  "usage": {
+    "cycleStart": "2025-06-08",
+    "cycleEnd": "2025-07-07",
+    "data": {
+      "used": 9.2,
+      "total": null,
+      "unit": "GB",
+      "unlimited": true
+    },
+    "hotspot": {
+      "used": 8.4,
+      "total": 15,
+      "unit": "GB"
+    },
+    "talk": {
+      "used": 342,
+      "total": null,
+      "unit": "min",
+      "unlimited": true
+    },
+    "text": {
+      "used": 1204,
+      "total": null,
+      "unit": "messages",
+      "unlimited": true
+    }
+  },
+  "lines": [
+    {
+      "id": "line-1",
+      "name": "Alex (Me)",
+      "number": "(555) 867-5309",
+      "device": "iPhone 15 Pro",
+      "status": "active",
+      "plan": "Unlimited"
+    },
+    {
+      "id": "line-2",
+      "name": "Jordan",
+      "number": "(555) 234-5678",
+      "device": "Samsung Galaxy S24",
+      "status": "active",
+      "plan": "Unlimited"
+    }
+  ],
+  "devices": [
+    {
+      "id": "dev-1",
+      "name": "iPhone 15 Pro",
+      "imei": "356938035643809",
+      "sim": "89014103211118510720",
+      "status": "active",
+      "installment": {
+        "remaining": 14,
+        "monthlyAmount": 41.62,
+        "totalPaid": 499.44
+      }
+    },
+    {
+      "id": "dev-2",
+      "name": "Samsung Galaxy S24",
+      "imei": "490154203237518",
+      "sim": "89014103211118510721",
+      "status": "active",
+      "installment": null
+    }
+  ]
+}

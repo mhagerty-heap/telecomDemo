@@ -1,0 +1,144 @@
+<%- include('../partials/header') %>
+<%- include('../partials/account_nav') %>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-extrabold text-gray-900">Manage Lines</h1>
+    <button id="btn-lines-add-line" onclick="document.getElementById('add-line-modal').classList.remove('hidden')"
+      class="flex items-center gap-2 bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-4 py-2.5 rounded-xl text-sm transition">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+      </svg>
+      Add a line
+    </button>
+  </div>
+
+  <!-- Lines -->
+  <div class="space-y-4 mb-8">
+    <% account.lines.forEach((line, i) => { %>
+      <div class="bg-white border rounded-2xl overflow-hidden">
+        <!-- Line header -->
+        <button id="btn-line-toggle-<%= i %>" onclick="toggleLine(<%= i %>)"
+          class="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 transition">
+          <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-nexus-100 rounded-full flex items-center justify-center text-nexus-600 font-bold">
+              <%= line.name.charAt(0) %>
+            </div>
+            <div class="text-left">
+              <div class="font-bold text-gray-900"><%= line.name %></div>
+              <div class="text-sm text-gray-400"><%= line.number %> · <%= line.device %></div>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="px-2.5 py-1 rounded-full text-xs font-semibold
+              <%= line.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' %>">
+              <%= line.status %>
+            </span>
+            <svg id="line-icon-<%= i %>" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+        </button>
+
+        <!-- Line detail (collapsed by default) -->
+        <div id="line-detail-<%= i %>" class="hidden border-t px-5 py-4 bg-gray-50">
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+            <div>
+              <div class="text-xs text-gray-400">Plan</div>
+              <div class="text-sm font-medium text-gray-800"><%= line.plan %></div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-400">Number</div>
+              <div class="text-sm font-medium text-gray-800"><%= line.number %></div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-400">Device</div>
+              <div class="text-sm font-medium text-gray-800"><%= line.device %></div>
+            </div>
+            <div>
+              <div class="text-xs text-gray-400">Status</div>
+              <div class="text-sm font-medium text-green-600 capitalize"><%= line.status %></div>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button id="btn-line-manage-<%= i %>" class="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition">
+              Change plan
+            </button>
+            <button class="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-100 transition">
+              Suspend line
+            </button>
+            <button id="link-line-remove-<%= i %>" class="px-3 py-1.5 text-xs font-medium bg-white border border-red-200 text-red-500 rounded-lg hover:bg-red-50 transition">
+              Remove line
+            </button>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Multi-line savings callout -->
+  <div class="bg-nexus-50 border border-nexus-200 rounded-2xl p-5 flex items-center justify-between gap-4">
+    <div>
+      <div class="font-bold text-nexus-800 mb-0.5">Add more lines and save</div>
+      <div class="text-sm text-nexus-600">3 lines: save $10/mo · 4 lines: save $15/mo · 5+ lines: save $20/mo</div>
+    </div>
+    <button id="btn-lines-add-line-callout" onclick="document.getElementById('add-line-modal').classList.remove('hidden')"
+      class="flex-shrink-0 bg-nexus-500 text-white font-bold px-4 py-2.5 rounded-xl text-sm hover:bg-nexus-600 transition">
+      Add a line
+    </button>
+  </div>
+</div>
+
+<!-- Add line modal -->
+<div id="add-line-modal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4">
+  <div class="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+    <div class="flex justify-between items-center mb-5">
+      <h2 class="text-lg font-bold text-gray-900">Add a new line</h2>
+      <button onclick="document.getElementById('add-line-modal').classList.add('hidden')"
+        class="text-gray-400 hover:text-gray-600">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+      </button>
+    </div>
+    <div class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Name for this line</label>
+        <input type="text" placeholder="e.g. Mom, Work, Kids" class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Plan</label>
+        <select class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500">
+          <option>Nexus Unlimited — $55/mo</option>
+          <option>Nexus Unlimited+ — $75/mo</option>
+          <option>Nexus Basic — $35/mo</option>
+        </select>
+      </div>
+      <div>
+        <label class="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
+          <input type="checkbox" class="accent-nexus-500"> Keep my current number (port-in)
+        </label>
+      </div>
+    </div>
+    <div class="flex gap-3 mt-6">
+      <button id="btn-modal-cancel" onclick="document.getElementById('add-line-modal').classList.add('hidden')"
+        class="flex-1 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+        Cancel
+      </button>
+      <button id="btn-modal-confirm" class="flex-1 py-2.5 bg-nexus-500 text-white rounded-xl text-sm font-bold hover:bg-nexus-600 transition">
+        Add Line
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function toggleLine(i) {
+    const detail = document.getElementById('line-detail-' + i);
+    const icon = document.getElementById('line-icon-' + i);
+    detail.classList.toggle('hidden');
+    icon.style.transform = detail.classList.contains('hidden') ? '' : 'rotate(180deg)';
+  }
+</script>
+
+<%- include('../partials/footer') %>

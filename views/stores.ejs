@@ -1,0 +1,241 @@
+<%- include('partials/header') %>
+
+<!-- Header -->
+<section class="bg-gradient-to-br from-nexus-900 to-nexus-700 text-white py-14 px-4 text-center">
+  <h1 class="text-4xl font-extrabold mb-3">Find a Store</h1>
+  <p class="text-blue-100 text-lg max-w-xl mx-auto">Visit one of our 400+ retail locations for hands-on help.</p>
+
+  <form onsubmit="searchStores(event)" class="max-w-sm mx-auto mt-6 flex gap-3">
+    <input type="text" id="store-search" placeholder="City, state, or ZIP"
+      class="flex-1 text-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 shadow">
+    <button type="submit"
+      class="bg-white text-nexus-700 font-bold px-5 py-3 rounded-xl hover:bg-blue-50 transition text-sm">
+      Search
+    </button>
+  </form>
+</section>
+
+<section class="py-10 px-4 bg-gray-50">
+  <div class="max-w-6xl mx-auto flex flex-col lg:flex-row gap-6">
+
+    <!-- Store list -->
+    <div class="lg:w-96 flex-shrink-0">
+
+      <!-- Filter -->
+      <div class="flex gap-2 mb-4 text-sm">
+        <% ['All', 'Open Now', 'With Repairs'].forEach((f, i) => { %>
+          <button id="<%= i === 0 ? 'btn-stores-filter-all' : i === 1 ? 'btn-stores-filter-open' : 'btn-stores-filter-repairs' %>" onclick="setStoreFilter('<%= f %>', this)"
+            class="store-filter-btn px-3 py-1.5 rounded-lg font-medium border transition
+              <%= i === 0 ? 'bg-nexus-500 text-white border-nexus-500' : 'bg-white text-gray-600 border-gray-200 hover:border-nexus-400' %>">
+            <%= f %>
+          </button>
+        <% }) %>
+      </div>
+
+      <div id="store-list" class="space-y-3 max-h-[560px] overflow-y-auto pr-1">
+        <% [
+          { id: 1, name: 'Nexus Mobile — Downtown', address: '100 Main St', city: 'Springfield, IL 62701', phone: '(217) 555-0101', hours: 'Mon–Sat 9am–8pm, Sun 11am–6pm', open: true, repairs: true, distance: '0.4 mi' },
+          { id: 2, name: 'Nexus Mobile — Westfield Mall', address: '2200 W Jefferson St', city: 'Springfield, IL 62702', phone: '(217) 555-0188', hours: 'Mon–Sat 10am–9pm, Sun 11am–7pm', open: true, repairs: false, distance: '2.1 mi' },
+          { id: 3, name: 'Nexus Mobile — North Side', address: '3450 North Grand Ave', city: 'Springfield, IL 62702', phone: '(217) 555-0234', hours: 'Mon–Fri 9am–7pm, Sat 10am–6pm, Sun Closed', open: false, repairs: true, distance: '3.7 mi' },
+          { id: 4, name: 'Nexus Mobile — Chatham', address: '780 Chatham Road', city: 'Chatham, IL 62629', phone: '(217) 555-0312', hours: 'Mon–Sat 10am–7pm, Sun 12pm–5pm', open: true, repairs: false, distance: '6.2 mi' },
+          { id: 5, name: 'Nexus Mobile — Rochester', address: '115 S Walnut St', city: 'Rochester, IL 62563', phone: '(217) 555-0450', hours: 'Mon–Sat 10am–6pm, Sun Closed', open: false, repairs: false, distance: '9.1 mi' },
+          { id: 6, name: 'Nexus Mobile — Decatur', address: '2490 N Water St', city: 'Decatur, IL 62526', phone: '(217) 555-0521', hours: 'Mon–Sat 9am–8pm, Sun 11am–5pm', open: true, repairs: true, distance: '38 mi' }
+        ].forEach(store => { %>
+          <div class="store-card bg-white border rounded-xl p-4 cursor-pointer hover:border-nexus-400 hover:shadow-sm transition"
+            data-open="<%= store.open %>"
+            data-repairs="<%= store.repairs %>"
+            onclick="selectStore(<%= store.id %>)"
+            id="store-card-<%= store.id %>">
+            <div class="flex items-start justify-between mb-1">
+              <h3 class="font-bold text-gray-900 text-sm"><%= store.name %></h3>
+              <span class="text-xs font-medium ml-2 flex-shrink-0 <%= store.open ? 'text-green-600' : 'text-gray-400' %>">
+                <%= store.open ? 'Open' : 'Closed' %>
+              </span>
+            </div>
+            <p class="text-xs text-gray-400 mb-2"><%= store.address %>, <%= store.city %></p>
+            <div class="flex items-center justify-between">
+              <div class="flex gap-2">
+                <% if (store.repairs) { %>
+                  <span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full font-medium">Repairs</span>
+                <% } %>
+              </div>
+              <span class="text-xs text-gray-400"><%= store.distance %></span>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- Map + detail panel -->
+    <div class="flex-1 space-y-4">
+
+      <!-- Static visual map -->
+      <div class="bg-white border rounded-2xl overflow-hidden" style="height: 340px;">
+        <svg viewBox="0 0 700 340" class="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <!-- Street grid background -->
+          <rect width="700" height="340" fill="#f1f5f9"/>
+          <!-- Horizontal streets -->
+          <% for(let y = 30; y < 340; y += 50) { %>
+            <line x1="0" y1="<%= y %>" x2="700" y2="<%= y %>" stroke="#e2e8f0" stroke-width="1.5"/>
+          <% } %>
+          <!-- Vertical streets -->
+          <% for(let x = 40; x < 700; x += 60) { %>
+            <line x1="<%= x %>" y1="0" x2="<%= x %>" y2="340" stroke="#e2e8f0" stroke-width="1.5"/>
+          <% } %>
+          <!-- Major roads -->
+          <line x1="0" y1="170" x2="700" y2="170" stroke="#cbd5e1" stroke-width="4"/>
+          <line x1="350" y1="0" x2="350" y2="340" stroke="#cbd5e1" stroke-width="4"/>
+          <line x1="0" y1="90" x2="700" y2="130" stroke="#e2e8f0" stroke-width="3"/>
+
+          <!-- Store pins -->
+          <% [
+            { id: 1, x: 350, y: 170, primary: true },
+            { id: 2, x: 220, y: 200 },
+            { id: 3, x: 430, y: 110 },
+            { id: 4, x: 520, y: 240 },
+            { id: 5, x: 580, y: 155 },
+            { id: 6, x: 150, y: 270 }
+          ].forEach(pin => { %>
+            <g id="map-pin-<%= pin.id %>" onclick="selectStore(<%= pin.id %>)" style="cursor:pointer">
+              <circle cx="<%= pin.x %>" cy="<%= pin.y %>" r="<%= pin.primary ? 14 : 11 %>"
+                fill="<%= pin.primary ? '#4361ee' : '#94a3b8' %>"
+                id="pin-circle-<%= pin.id %>"/>
+              <text x="<%= pin.x %>" y="<%= pin.y + 4 %>" text-anchor="middle"
+                font-size="<%= pin.primary ? 10 : 9 %>" fill="white" font-family="sans-serif" font-weight="bold">
+                <%= pin.id %>
+              </text>
+            </g>
+          <% }) %>
+        </svg>
+      </div>
+
+      <!-- Store detail panel -->
+      <div id="store-detail" class="bg-white border rounded-2xl p-5">
+        <p class="text-sm text-gray-400 text-center py-4">Click a store to see details</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- In-store services -->
+<section class="py-12 px-4 bg-white border-t">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-xl font-bold text-gray-900 text-center mb-8">What we offer in store</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 text-center">
+      <% [
+        { icon: '📱', title: 'Device Setup', desc: 'Transfer your data and get your new phone ready to go.' },
+        { icon: '🔧', title: 'Repairs', desc: 'Screen replacements and hardware fixes at select locations.' },
+        { icon: '💳', title: 'Bill Payment', desc: 'Pay your bill in person with cash, card, or check.' },
+        { icon: '🎧', title: 'Personal Help', desc: 'One-on-one time with a Nexus expert for any questions.' }
+      ].forEach(s => { %>
+        <div class="bg-gray-50 rounded-2xl p-5">
+          <div class="text-3xl mb-3"><%= s.icon %></div>
+          <h3 class="font-bold text-gray-900 text-sm mb-1"><%= s.title %></h3>
+          <p class="text-xs text-gray-400"><%= s.desc %></p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<script>
+  const stores = {
+    1: { name: 'Nexus Mobile — Downtown', address: '100 Main St, Springfield, IL 62701', phone: '(217) 555-0101', hours: 'Mon–Sat 9am–8pm · Sun 11am–6pm', open: true, repairs: true, distance: '0.4 mi' },
+    2: { name: 'Nexus Mobile — Westfield Mall', address: '2200 W Jefferson St, Springfield, IL 62702', phone: '(217) 555-0188', hours: 'Mon–Sat 10am–9pm · Sun 11am–7pm', open: true, repairs: false, distance: '2.1 mi' },
+    3: { name: 'Nexus Mobile — North Side', address: '3450 North Grand Ave, Springfield, IL 62702', phone: '(217) 555-0234', hours: 'Mon–Fri 9am–7pm · Sat 10am–6pm · Sun Closed', open: false, repairs: true, distance: '3.7 mi' },
+    4: { name: 'Nexus Mobile — Chatham', address: '780 Chatham Road, Chatham, IL 62629', phone: '(217) 555-0312', hours: 'Mon–Sat 10am–7pm · Sun 12pm–5pm', open: true, repairs: false, distance: '6.2 mi' },
+    5: { name: 'Nexus Mobile — Rochester', address: '115 S Walnut St, Rochester, IL 62563', phone: '(217) 555-0450', hours: 'Mon–Sat 10am–6pm · Sun Closed', open: false, repairs: false, distance: '9.1 mi' },
+    6: { name: 'Nexus Mobile — Decatur', address: '2490 N Water St, Decatur, IL 62526', phone: '(217) 555-0521', hours: 'Mon–Sat 9am–8pm · Sun 11am–5pm', open: true, repairs: true, distance: '38 mi' }
+  };
+
+  function selectStore(id) {
+    const s = stores[id];
+
+    // Highlight card
+    document.querySelectorAll('.store-card').forEach(c => {
+      c.classList.remove('border-nexus-500', 'shadow-md');
+    });
+    const card = document.getElementById('store-card-' + id);
+    if (card) {
+      card.classList.add('border-nexus-500', 'shadow-md');
+      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    // Highlight map pin
+    document.querySelectorAll('[id^="pin-circle-"]').forEach(c => {
+      c.setAttribute('fill', '#94a3b8');
+      c.setAttribute('r', '11');
+    });
+    const pin = document.getElementById('pin-circle-' + id);
+    if (pin) {
+      pin.setAttribute('fill', '#4361ee');
+      pin.setAttribute('r', '14');
+    }
+
+    // Update detail panel
+    document.getElementById('store-detail').innerHTML = `
+      <div class="flex items-start justify-between mb-3">
+        <div>
+          <h3 class="font-bold text-gray-900">${s.name}</h3>
+          <p class="text-sm text-gray-400 mt-0.5">${s.address}</p>
+        </div>
+        <span class="text-xs font-semibold px-2.5 py-1 rounded-full flex-shrink-0 ml-3
+          ${s.open ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}">
+          ${s.open ? 'Open Now' : 'Closed'}
+        </span>
+      </div>
+      <div class="grid grid-cols-2 gap-3 mb-4 text-sm">
+        <div>
+          <div class="text-xs text-gray-400">Phone</div>
+          <a href="tel:${s.phone.replace(/\D/g,'')}" class="font-medium text-nexus-600 hover:underline">${s.phone}</a>
+        </div>
+        <div>
+          <div class="text-xs text-gray-400">Distance</div>
+          <div class="font-medium text-gray-800">${s.distance}</div>
+        </div>
+        <div class="col-span-2">
+          <div class="text-xs text-gray-400 mb-0.5">Hours</div>
+          <div class="font-medium text-gray-800 text-xs">${s.hours}</div>
+        </div>
+      </div>
+      ${s.repairs ? '<span class="inline-block text-xs bg-blue-50 text-blue-600 px-2.5 py-1 rounded-full font-medium mb-4">Repairs available</span>' : ''}
+      <div class="flex gap-3">
+        <a href="https://maps.google.com/?q=${encodeURIComponent(s.address)}" id="link-store-directions" target="_blank" rel="noopener"
+          class="flex-1 text-center text-sm bg-nexus-500 text-white font-bold py-2.5 rounded-xl hover:bg-nexus-600 transition">
+          Get Directions
+        </a>
+        <a href="tel:${s.phone.replace(/\D/g,'')}" id="link-store-call"
+          class="flex-1 text-center text-sm bg-gray-100 text-gray-700 font-medium py-2.5 rounded-xl hover:bg-gray-200 transition">
+          Call Store
+        </a>
+      </div>
+    `;
+  }
+
+  function searchStores(e) {
+    e.preventDefault();
+    // Simulate search by selecting store 1
+    selectStore(1);
+    document.getElementById('store-card-1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function setStoreFilter(filter, btn) {
+    document.querySelectorAll('.store-filter-btn').forEach(b => {
+      b.className = 'store-filter-btn px-3 py-1.5 rounded-lg font-medium border transition bg-white text-gray-600 border-gray-200 hover:border-nexus-400 text-sm';
+    });
+    btn.className = 'store-filter-btn px-3 py-1.5 rounded-lg font-medium border transition bg-nexus-500 text-white border-nexus-500 text-sm';
+
+    document.querySelectorAll('.store-card').forEach(card => {
+      let show = true;
+      if (filter === 'Open Now') show = card.dataset.open === 'true';
+      if (filter === 'With Repairs') show = card.dataset.repairs === 'true';
+      card.style.display = show ? '' : 'none';
+    });
+  }
+
+  // Select first store on load
+  selectStore(1);
+</script>
+
+<%- include('partials/footer') %>

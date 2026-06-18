@@ -1,0 +1,162 @@
+[
+  {
+    "id": "iphone-16-pro",
+    "name": "iPhone 16 Pro",
+    "brand": "Apple",
+    "price": 999,
+    "monthlyPrice": 41.62,
+    "colors": ["Black Titanium", "White Titanium", "Natural Titanium", "Desert Titanium"],
+    "storage": ["128GB", "256GB", "512GB", "1TB"],
+    "emoji": "📱",
+    "badge": "New",
+    "rating": 4.9,
+    "reviews": 2841,
+    "tagline": "Titanium. So strong. So light. So Pro.",
+    "features": ["A18 Pro chip", "48MP camera system", "ProMotion 120Hz display", "USB-C with USB 3", "Action Button", "5G capable"],
+    "specs": {
+      "Display": "6.3-inch Super Retina XDR",
+      "Chip": "A18 Pro",
+      "Camera": "48MP Main + 48MP Ultra Wide + 12MP Telephoto",
+      "Battery": "Up to 27 hours video playback",
+      "Storage": "128GB – 1TB",
+      "5G": "Yes"
+    }
+  },
+  {
+    "id": "samsung-s25-ultra",
+    "name": "Galaxy S25 Ultra",
+    "brand": "Samsung",
+    "price": 1299,
+    "monthlyPrice": 54.12,
+    "colors": ["Titanium Black", "Titanium Gray", "Titanium Blue", "Titanium White"],
+    "storage": ["256GB", "512GB", "1TB"],
+    "emoji": "📱",
+    "badge": "New",
+    "rating": 4.8,
+    "reviews": 1932,
+    "tagline": "The ultimate Samsung flagship with built-in S Pen.",
+    "features": ["Snapdragon 8 Elite", "200MP camera", "S Pen included", "6.9-inch Dynamic AMOLED", "5000mAh battery", "5G capable"],
+    "specs": {
+      "Display": "6.9-inch QHD+ Dynamic AMOLED",
+      "Chip": "Snapdragon 8 Elite",
+      "Camera": "200MP Main + 50MP Periscope + 10MP Telephoto + 12MP Ultra Wide",
+      "Battery": "5000mAh, up to 27 hours",
+      "Storage": "256GB – 1TB",
+      "5G": "Yes"
+    }
+  },
+  {
+    "id": "pixel-9-pro",
+    "name": "Pixel 9 Pro",
+    "brand": "Google",
+    "price": 999,
+    "monthlyPrice": 41.62,
+    "colors": ["Obsidian", "Porcelain", "Hazel", "Rose Quartz"],
+    "storage": ["128GB", "256GB", "512GB"],
+    "emoji": "📱",
+    "badge": null,
+    "rating": 4.7,
+    "reviews": 1247,
+    "tagline": "The smartest Pixel ever. Powered by Google AI.",
+    "features": ["Google Tensor G4", "50MP triple camera", "Google AI features", "7 years of updates", "Magic Eraser & Photo Unblur", "5G capable"],
+    "specs": {
+      "Display": "6.3-inch LTPO OLED",
+      "Chip": "Google Tensor G4",
+      "Camera": "50MP Main + 48MP Ultra Wide + 48MP Telephoto",
+      "Battery": "4700mAh, up to 24 hours",
+      "Storage": "128GB – 512GB",
+      "5G": "Yes"
+    }
+  },
+  {
+    "id": "iphone-16",
+    "name": "iPhone 16",
+    "brand": "Apple",
+    "price": 799,
+    "monthlyPrice": 33.29,
+    "colors": ["Black", "White", "Pink", "Teal", "Ultramarine"],
+    "storage": ["128GB", "256GB", "512GB"],
+    "emoji": "📱",
+    "badge": null,
+    "rating": 4.8,
+    "reviews": 3201,
+    "tagline": "A new way to shoot. A new way to connect.",
+    "features": ["A18 chip", "48MP camera with Camera Control", "Action Button", "USB-C", "MagSafe", "5G capable"],
+    "specs": {
+      "Display": "6.1-inch Super Retina XDR",
+      "Chip": "A18",
+      "Camera": "48MP Main + 12MP Ultra Wide",
+      "Battery": "Up to 22 hours video playback",
+      "Storage": "128GB – 512GB",
+      "5G": "Yes"
+    }
+  },
+  {
+    "id": "samsung-a55",
+    "name": "Galaxy A55",
+    "brand": "Samsung",
+    "price": 449,
+    "monthlyPrice": 18.71,
+    "colors": ["Awesome Iceblue", "Awesome Navy", "Awesome Lilac"],
+    "storage": ["128GB", "256GB"],
+    "emoji": "📱",
+    "badge": "Best Value",
+    "rating": 4.5,
+    "reviews": 876,
+    "tagline": "Epic performance. Approachable price.",
+    "features": ["Exynos 1480", "50MP triple camera", "Super AMOLED display", "5000mAh battery", "IP67 water resistant", "5G capable"],
+    "specs": {
+      "Display": "6.6-inch FHD+ Super AMOLED",
+      "Chip": "Exynos 1480",
+      "Camera": "50MP Main + 12MP Ultra Wide + 5MP Macro",
+      "Battery": "5000mAh",
+      "Storage": "128GB – 256GB",
+      "5G": "Yes"
+    }
+  },
+  {
+    "id": "moto-g-power",
+    "name": "Moto G Power 5G",
+    "brand": "Motorola",
+    "price": 299,
+    "monthlyPrice": 12.46,
+    "colors": ["Midnight Blue", "Pale Lilac"],
+    "storage": ["128GB", "256GB"],
+    "emoji": "📱",
+    "badge": "Budget Pick",
+    "rating": 4.3,
+    "reviews": 541,
+    "tagline": "All-day battery. Dependable performance.",
+    "features": ["Snapdragon 695", "50MP camera", "6000mAh battery", "5G capable", "Expandable storage", "Android 14"],
+    "specs": {
+      "Display": "6.7-inch FHD+ IPS LCD",
+      "Chip": "Snapdragon 695",
+      "Camera": "50MP Main + 8MP Ultra Wide + 2MP Depth",
+      "Battery": "6000mAh, up to 3 days",
+      "Storage": "128GB – 256GB",
+      "5G": "Yes"
+    }
+  },
+  {
+    "id": "hotspot-pro",
+    "name": "Nexus Mobile Hotspot Pro",
+    "brand": "Nexus",
+    "price": 99,
+    "monthlyPrice": null,
+    "colors": ["White", "Black"],
+    "storage": null,
+    "emoji": "🔌",
+    "badge": null,
+    "rating": 4.4,
+    "reviews": 312,
+    "tagline": "Share your connection with up to 10 devices.",
+    "features": ["Wi-Fi 6 capable", "Connect up to 10 devices", "3-hour battery", "USB-C charging", "Works with any Nexus plan"],
+    "specs": {
+      "Wi-Fi": "Wi-Fi 6 (802.11ax)",
+      "Connections": "Up to 10 simultaneous devices",
+      "Battery": "3,000mAh, ~8 hours use",
+      "Charging": "USB-C",
+      "5G": "Yes"
+    }
+  }
+]

@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/plans)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/plans/unlimited)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/checkout/plan)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/checkout/device)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/checkout/details)",
+      "Bash(curl -s -c /tmp/nexus_cookies.txt -X POST http://localhost:3001/login -d 'email=demo%40nexusmobile.com&password=demo123' -H 'Content-Type: application/x-www-form-urlencoded' -L -o /dev/null -w '%{http_code}')",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -b /tmp/nexus_cookies.txt http://localhost:3001/account)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -b /tmp/nexus_cookies.txt http://localhost:3001/account/bill)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -b /tmp/nexus_cookies.txt http://localhost:3001/account/plan)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -b /tmp/nexus_cookies.txt http://localhost:3001/account/lines)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/devices)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/devices/iphone-16-pro)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/devices/samsung-s25-ultra)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/devices/moto-g-power)",
+      "Bash(curl -s http://localhost:3001/devices/iphone-16-pro)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/devices/hotspot-pro)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/support)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/support/troubleshoot)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3001/support/outages?zip=90210\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"http://localhost:3001/support/outages?zip=62701\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/support/contact)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/deals)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/coverage)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001/stores)"
+    ]
+  }
+}

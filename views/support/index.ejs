@@ -1,0 +1,174 @@
+<%- include('../partials/header') %>
+
+<!-- Header -->
+<section class="bg-gradient-to-br from-nexus-900 to-nexus-700 text-white py-14 px-4 text-center">
+  <h1 class="text-4xl font-extrabold mb-3">How can we help?</h1>
+  <p class="text-blue-100 text-lg mb-6 max-w-xl mx-auto">Search our help center or choose a topic below.</p>
+  <div class="max-w-xl mx-auto relative">
+    <input type="text" id="search-input" placeholder="Search for help..."
+      class="w-full text-gray-800 rounded-xl px-5 py-3.5 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 shadow-lg"
+      oninput="filterTopics()">
+    <svg class="w-5 h-5 text-gray-400 absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+    </svg>
+  </div>
+</section>
+
+<!-- Quick action cards -->
+<section class="py-12 px-4 bg-white">
+  <div class="max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <a href="/support/troubleshoot" id="link-support-quick-troubleshoot"
+        class="group border rounded-2xl p-6 hover:border-nexus-400 hover:shadow-md transition flex flex-col items-center text-center">
+        <div class="w-14 h-14 bg-nexus-50 group-hover:bg-nexus-100 rounded-2xl flex items-center justify-center mb-4 transition">
+          <svg class="w-7 h-7 text-nexus-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-1">Troubleshoot</h3>
+        <p class="text-sm text-gray-400">Fix network, device, or billing issues with our step-by-step guide.</p>
+      </a>
+
+      <a href="/support/outages" id="link-support-quick-outages"
+        class="group border rounded-2xl p-6 hover:border-nexus-400 hover:shadow-md transition flex flex-col items-center text-center">
+        <div class="w-14 h-14 bg-nexus-50 group-hover:bg-nexus-100 rounded-2xl flex items-center justify-center mb-4 transition">
+          <svg class="w-7 h-7 text-nexus-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-1">Check Outages</h3>
+        <p class="text-sm text-gray-400">See if there's a network issue in your area right now.</p>
+      </a>
+
+      <a href="/support/contact" id="link-support-quick-contact"
+        class="group border rounded-2xl p-6 hover:border-nexus-400 hover:shadow-md transition flex flex-col items-center text-center">
+        <div class="w-14 h-14 bg-nexus-50 group-hover:bg-nexus-100 rounded-2xl flex items-center justify-center mb-4 transition">
+          <svg class="w-7 h-7 text-nexus-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 3H3a2 2 0 00-2 2v14a2 2 0 002 2h18a2 2 0 002-2V5a2 2 0 00-2-2z"/>
+          </svg>
+        </div>
+        <h3 class="font-bold text-gray-900 mb-1">Contact Us</h3>
+        <p class="text-sm text-gray-400">Request a callback or send us a message — we'll respond within 2 hours.</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Help topics -->
+<section class="py-12 px-4 bg-gray-50">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-xl font-bold text-gray-900 mb-6">Browse by topic</h2>
+
+    <div id="topic-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <% [
+        {
+          topic: 'Billing & Payments',
+          icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+          items: ['Understanding your bill', 'Set up AutoPay', 'Update payment method', 'Dispute a charge']
+        },
+        {
+          topic: 'Network & Coverage',
+          icon: 'M8.111 16.404a5.5 5.5 0 017.778 0M12 20h.01m-7.08-7.071c3.904-3.905 10.236-3.905 14.141 0M1.394 9.393c5.857-5.857 15.355-5.857 21.213 0',
+          items: ['Why is my signal weak?', 'Check coverage in my area', 'Report a network issue', '5G availability']
+        },
+        {
+          topic: 'Devices & SIM',
+          icon: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
+          items: ['Activate a new SIM', 'Report lost or stolen device', 'Unlock my device', 'Transfer to eSIM']
+        },
+        {
+          topic: 'Plans & Account',
+          icon: 'M13 10V3L4 14h7v7l9-11h-7z',
+          items: ['Switch or upgrade my plan', 'Add a line', 'Cancel my service', 'Transfer account ownership']
+        },
+        {
+          topic: 'Roaming & International',
+          icon: 'M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064',
+          items: ['International calling rates', 'Using data abroad', 'Enable international roaming', 'Wi-Fi calling abroad']
+        },
+        {
+          topic: 'Apps & Features',
+          icon: 'M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zm10 0a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z',
+          items: ['Nexus Mobile app setup', 'Wi-Fi calling setup', 'Visual voicemail', 'Hotspot setup']
+        }
+      ].forEach((section, i) => { %>
+        <div class="topic-card bg-white border rounded-2xl overflow-hidden" data-topic="<%= section.topic.toLowerCase() %>">
+          <button id="btn-support-topic-<%= i %>" onclick="toggleTopic(this)"
+            class="w-full flex items-center gap-3 px-5 py-4 hover:bg-gray-50 transition text-left">
+            <div class="w-8 h-8 bg-nexus-50 rounded-lg flex items-center justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-nexus-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="<%= section.icon %>"/>
+              </svg>
+            </div>
+            <span class="font-semibold text-gray-800 flex-1"><%= section.topic %></span>
+            <svg class="w-4 h-4 text-gray-400 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div class="hidden border-t divide-y">
+            <% section.items.forEach(item => { %>
+              <a href="/support/troubleshoot" class="block px-5 py-3 text-sm text-gray-600 hover:bg-gray-50 hover:text-nexus-600 transition pl-16">
+                <%= item %>
+              </a>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <div id="no-topics" class="hidden text-center py-10 text-gray-400">
+      <div class="text-3xl mb-2">🔍</div>
+      <p>No topics found. Try <a href="/support/contact" class="text-nexus-500 hover:underline">contacting us</a>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Live chat CTA -->
+<section class="py-12 px-4 bg-white border-t">
+  <div class="max-w-3xl mx-auto flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
+    <div class="w-16 h-16 bg-nexus-500 rounded-2xl flex items-center justify-center flex-shrink-0 mx-auto md:mx-0">
+      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+      </svg>
+    </div>
+    <div class="flex-1">
+      <h3 class="font-bold text-gray-900 text-lg mb-1">Still need help?</h3>
+      <p class="text-gray-500 text-sm">Our support team is available 24/7. Average wait time is under 3 minutes.</p>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-3 flex-shrink-0">
+      <button id="btn-support-live-chat" onclick="alert('Live chat coming soon — this would launch a chat widget in a real deployment.')"
+        class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-5 py-2.5 rounded-xl transition text-sm">
+        Start Live Chat
+      </button>
+      <a href="/support/contact" id="link-support-send-message"
+        class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-5 py-2.5 rounded-xl transition text-sm">
+        Send a Message
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  function toggleTopic(btn) {
+    const body = btn.nextElementSibling;
+    const icon = btn.querySelector('svg:last-child');
+    body.classList.toggle('hidden');
+    icon.style.transform = body.classList.contains('hidden') ? '' : 'rotate(180deg)';
+  }
+
+  function filterTopics() {
+    const q = document.getElementById('search-input').value.toLowerCase();
+    const cards = document.querySelectorAll('.topic-card');
+    let visible = 0;
+    cards.forEach(card => {
+      const match = card.dataset.topic.includes(q) ||
+        card.innerText.toLowerCase().includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    document.getElementById('no-topics').classList.toggle('hidden', visible > 0 || q === '');
+  }
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,306 @@
+<%- include('../partials/header') %>
+
+<!-- Header -->
+<div class="bg-white border-b px-4 py-3">
+  <div class="max-w-3xl mx-auto text-sm text-gray-500">
+    <a href="/support" class="hover:text-nexus-500">Support</a>
+    <span class="mx-2">›</span>
+    <span class="text-gray-800 font-medium">Troubleshooter</span>
+  </div>
+</div>
+
+<div class="max-w-3xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Self-service Troubleshooter</h1>
+  <p class="text-gray-500 mb-8">Answer a few questions and we'll walk you through a fix.</p>
+
+  <!-- Wizard container -->
+  <div id="wizard" class="bg-white border rounded-2xl overflow-hidden">
+
+    <!-- Step 1: Choose issue category -->
+    <div id="step-1" class="wizard-step p-6">
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Step 1 of 3</div>
+      <h2 class="text-lg font-bold text-gray-900 mb-5">What are you having trouble with?</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <% [
+          { id: 'network', label: 'No signal or weak signal', icon: '📶' },
+          { id: 'data', label: 'Mobile data not working', icon: '🌐' },
+          { id: 'calls', label: 'Calls dropping or failing', icon: '📞' },
+          { id: 'billing', label: 'Unexpected charge on bill', icon: '💳' },
+          { id: 'device', label: 'Device won\'t turn on', icon: '📱' },
+          { id: 'account', label: 'Can\'t log in to account', icon: '🔐' }
+        ].forEach(issue => { %>
+          <button id="btn-troubleshoot-issue-<%= issue.id %>" onclick="selectIssue('<%= issue.id %>', '<%= issue.label %>')"
+            class="issue-btn flex items-center gap-3 border-2 border-gray-200 rounded-xl p-4 text-left hover:border-nexus-400 hover:bg-nexus-50 transition"
+            data-id="<%= issue.id %>">
+            <span class="text-2xl"><%= issue.icon %></span>
+            <span class="text-sm font-medium text-gray-700"><%= issue.label %></span>
+          </button>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- Step 2: Diagnostic questions (shown dynamically) -->
+    <div id="step-2" class="wizard-step hidden p-6">
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Step 2 of 3</div>
+      <h2 class="text-lg font-bold text-gray-900 mb-1" id="step2-title">Diagnosing your issue</h2>
+      <p class="text-sm text-gray-400 mb-6" id="step2-subtitle">Answer a few questions to narrow things down.</p>
+      <div id="step2-questions" class="space-y-4"></div>
+      <div class="flex gap-3 mt-6">
+        <button id="btn-troubleshoot-back" onclick="goBack(1)" class="px-5 py-2.5 border border-gray-200 rounded-xl text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+          ← Back
+        </button>
+        <button id="btn-troubleshoot-next" onclick="goStep(3)" class="flex-1 bg-nexus-500 hover:bg-nexus-600 text-white font-bold py-2.5 rounded-xl text-sm transition">
+          Continue →
+        </button>
+      </div>
+    </div>
+
+    <!-- Step 3: Resolution steps -->
+    <div id="step-3" class="wizard-step hidden p-6">
+      <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">Step 3 of 3</div>
+      <h2 class="text-lg font-bold text-gray-900 mb-1">Try these steps</h2>
+      <p class="text-sm text-gray-400 mb-6">Follow these in order. Most issues are resolved at step 1 or 2.</p>
+
+      <div id="resolution-steps" class="space-y-3 mb-6"></div>
+
+      <div class="bg-gray-50 border rounded-xl p-4 mb-6">
+        <p class="text-sm font-medium text-gray-700 mb-3">Did this solve your issue?</p>
+        <div class="flex gap-3">
+          <button id="btn-troubleshoot-resolve-yes" onclick="showResolved(true)"
+            class="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 rounded-xl text-sm transition">
+            ✓ Yes, it's fixed!
+          </button>
+          <button id="btn-troubleshoot-resolve-no" onclick="showResolved(false)"
+            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 rounded-xl text-sm transition">
+            ✗ Still having issues
+          </button>
+        </div>
+      </div>
+
+      <button id="btn-troubleshoot-restart" onclick="restart()" class="text-sm text-gray-400 hover:text-gray-600">← Start over</button>
+    </div>
+
+    <!-- Resolved: success -->
+    <div id="step-resolved" class="wizard-step hidden p-8 text-center">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-900 mb-2">Great, glad that worked!</h2>
+      <p class="text-gray-400 text-sm mb-6">Is there anything else we can help you with?</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button onclick="restart()" class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">
+          Troubleshoot another issue
+        </button>
+        <a href="/support" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-2.5 rounded-xl text-sm transition">
+          Back to Support
+        </a>
+      </div>
+    </div>
+
+    <!-- Resolved: still broken → escalate -->
+    <div id="step-escalate" class="wizard-step hidden p-8 text-center">
+      <div class="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+      </div>
+      <h2 class="text-xl font-bold text-gray-900 mb-2">Let's get you to an agent</h2>
+      <p class="text-gray-400 text-sm mb-6">We weren't able to solve this automatically. A support agent can dig deeper.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <button id="btn-troubleshoot-live-chat" onclick="alert('Live chat would launch here in a real deployment.')"
+          class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm transition">
+          Start Live Chat
+        </button>
+        <a href="/support/contact" id="link-troubleshoot-contact"
+          class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-5 py-2.5 rounded-xl text-sm transition">
+          Send a Message
+        </a>
+      </div>
+      <button onclick="restart()" class="mt-4 text-sm text-gray-400 hover:text-gray-600 block mx-auto">← Start over</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  const diagnostics = {
+    network: {
+      title: 'No signal / weak signal',
+      subtitle: 'A few quick questions to pinpoint the problem.',
+      questions: [
+        { q: 'Is this happening at a specific location only?', opts: ['Yes, only here', 'No, everywhere'] },
+        { q: 'When did this start?', opts: ['Just now', 'Today', 'A few days ago'] },
+        { q: 'Have you restarted your phone recently?', opts: ['Yes', 'No'] }
+      ],
+      steps: [
+        'Toggle Airplane Mode on for 10 seconds, then off again.',
+        'Restart your phone completely (hold power button → Restart).',
+        'Check our coverage map at nexusmobile.com/coverage for your area.',
+        'Remove and reinsert your SIM card, then restart.',
+        'Reset network settings: Settings → General → Reset → Reset Network Settings.'
+      ]
+    },
+    data: {
+      title: 'Mobile data not working',
+      subtitle: 'Let\'s figure out why your data isn\'t connecting.',
+      questions: [
+        { q: 'Can you make phone calls?', opts: ['Yes', 'No'] },
+        { q: 'Are you connected to Wi-Fi?', opts: ['Yes', 'No'] },
+        { q: 'Has your data usage been unusually high this month?', opts: ['Yes', 'Not sure', 'No'] }
+      ],
+      steps: [
+        'Turn mobile data off and back on in your phone settings.',
+        'Restart your phone.',
+        'Check your data usage — you may have hit your hotspot limit.',
+        'Verify mobile data is enabled: Settings → Mobile Data → On.',
+        'Check your APN settings match Nexus Mobile\'s configuration (Settings → Mobile → APN).'
+      ]
+    },
+    calls: {
+      title: 'Calls dropping or failing',
+      subtitle: 'Let\'s diagnose your call quality issue.',
+      questions: [
+        { q: 'Do calls drop at a specific location?', opts: ['Yes, specific place', 'Happens anywhere'] },
+        { q: 'Are you on Wi-Fi Calling?', opts: ['Yes', 'No', 'Not sure'] },
+        { q: 'Does the issue affect all calls or specific numbers?', opts: ['All calls', 'Specific numbers'] }
+      ],
+      steps: [
+        'Restart your phone and try calling again.',
+        'Enable Wi-Fi Calling if you\'re in a low-signal area: Settings → Phone → Wi-Fi Calling.',
+        'Disable Wi-Fi Calling temporarily and try over cellular.',
+        'Check if the issue is with a specific contact — they may have network issues on their end.',
+        'Reset network settings: Settings → General → Reset → Reset Network Settings.'
+      ]
+    },
+    billing: {
+      title: 'Unexpected charge',
+      subtitle: 'Let\'s find out what that charge is.',
+      questions: [
+        { q: 'When did the charge appear?', opts: ['This month', 'Last month', 'Several months ago'] },
+        { q: 'Do you recognize the charge amount?', opts: ['Partially', 'Not at all'] },
+        { q: 'Did you recently change your plan or add a line?', opts: ['Yes', 'No'] }
+      ],
+      steps: [
+        'Log into your account and review your bill breakdown at nexusmobile.com/account/bill.',
+        'Check if you added any premium services, roaming, or international calls.',
+        'Look for a plan change or prorated charge from a recent upgrade.',
+        'If the charge is still unclear, gather the date and amount and contact us.',
+        'You can dispute a charge directly from your account under Bill & Payments.'
+      ]
+    },
+    device: {
+      title: 'Device won\'t turn on',
+      subtitle: 'Let\'s try to bring your device back to life.',
+      questions: [
+        { q: 'When did it last work?', opts: ['Today', 'Yesterday', 'Several days ago'] },
+        { q: 'Is the battery possibly dead?', opts: ['Yes, it may be', 'I\'ve been charging it', 'Not sure'] },
+        { q: 'Did you drop or get the device wet recently?', opts: ['Yes', 'No'] }
+      ],
+      steps: [
+        'Plug into a charger for at least 15 minutes before trying to power on.',
+        'Hold the power button for 10–15 seconds to force a restart.',
+        'Try a different charging cable and power adapter.',
+        'If the screen is cracked or device was dropped, visit a store for hardware assessment.',
+        'Contact us to check if a hardware replacement or warranty claim applies.'
+      ]
+    },
+    account: {
+      title: 'Can\'t log in',
+      subtitle: 'Let\'s get you back into your account.',
+      questions: [
+        { q: 'What happens when you try to log in?', opts: ['Wrong password error', 'Account locked', 'Page won\'t load'] },
+        { q: 'Have you tried resetting your password?', opts: ['Yes, still failing', 'No, not yet'] },
+        { q: 'Are you using the correct email address?', opts: ['Yes', 'Not sure'] }
+      ],
+      steps: [
+        'Use the "Forgot password?" link on the login page to reset via email.',
+        'Check your spam/junk folder for the reset email.',
+        'Make sure you\'re using the email address you signed up with.',
+        'Try logging in from a different browser or device.',
+        'If your account is locked after multiple attempts, wait 30 minutes and try again.'
+      ]
+    }
+  };
+
+  let currentIssue = null;
+
+  function showOnly(id) {
+    document.querySelectorAll('.wizard-step').forEach(s => s.classList.add('hidden'));
+    document.getElementById(id).classList.remove('hidden');
+  }
+
+  function selectIssue(id, label) {
+    currentIssue = id;
+    const data = diagnostics[id];
+
+    // Highlight selected button
+    document.querySelectorAll('.issue-btn').forEach(btn => {
+      const isSelected = btn.dataset.id === id;
+      btn.classList.toggle('border-nexus-500', isSelected);
+      btn.classList.toggle('bg-nexus-50', isSelected);
+      btn.classList.toggle('border-gray-200', !isSelected);
+    });
+
+    // Build step 2
+    document.getElementById('step2-title').textContent = data.title;
+    document.getElementById('step2-subtitle').textContent = data.subtitle;
+    const qContainer = document.getElementById('step2-questions');
+    qContainer.innerHTML = data.questions.map((q, i) => `
+      <div>
+        <p class="text-sm font-medium text-gray-700 mb-2">${q.q}</p>
+        <div class="flex flex-wrap gap-2">
+          ${q.opts.map(opt => `
+            <button type="button" onclick="selectAnswer(this)"
+              class="answer-btn px-3 py-1.5 border-2 border-gray-200 rounded-lg text-sm text-gray-600 hover:border-nexus-400 hover:bg-nexus-50 transition">
+              ${opt}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    `).join('');
+
+    setTimeout(() => showOnly('step-2'), 150);
+  }
+
+  function selectAnswer(btn) {
+    const group = btn.closest('div').querySelectorAll('.answer-btn');
+    group.forEach(b => {
+      b.classList.remove('border-nexus-500', 'bg-nexus-50', 'text-nexus-700');
+      b.classList.add('border-gray-200', 'text-gray-600');
+    });
+    btn.classList.add('border-nexus-500', 'bg-nexus-50', 'text-nexus-700');
+    btn.classList.remove('border-gray-200', 'text-gray-600');
+  }
+
+  function goStep(n) {
+    if (n === 3 && currentIssue) {
+      const steps = diagnostics[currentIssue].steps;
+      document.getElementById('resolution-steps').innerHTML = steps.map((s, i) => `
+        <div class="flex items-start gap-3 p-4 bg-gray-50 rounded-xl">
+          <div class="w-7 h-7 bg-nexus-500 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">${i+1}</div>
+          <p class="text-sm text-gray-700">${s}</p>
+        </div>
+      `).join('');
+    }
+    showOnly('step-' + n);
+  }
+
+  function goBack(n) { showOnly('step-' + n); }
+
+  function showResolved(ok) {
+    showOnly(ok ? 'step-resolved' : 'step-escalate');
+  }
+
+  function restart() {
+    currentIssue = null;
+    document.querySelectorAll('.issue-btn').forEach(btn => {
+      btn.classList.remove('border-nexus-500', 'bg-nexus-50');
+      btn.classList.add('border-gray-200');
+    });
+    showOnly('step-1');
+  }
+</script>
+
+<%- include('../partials/footer') %>

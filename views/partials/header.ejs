@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title><%= typeof title !== 'undefined' ? title + ' | Nexus Mobile' : 'Nexus Mobile' %></title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            nexus: {
+              50:  '#f0f4ff',
+              100: '#dde8ff',
+              500: '#4361ee',
+              600: '#3451d1',
+              700: '#2a40b8',
+              900: '#1a2870',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="/css/site.css" />
+</head>
+<body class="bg-gray-50 text-gray-800 flex flex-col min-h-screen">
+
+<!-- Top Bar -->
+<div class="bg-nexus-900 text-white text-xs py-1 px-4 flex justify-between items-center">
+  <span>Free shipping on devices $199+</span>
+  <div class="flex gap-4">
+    <a id="link-topbar-support" href="/support" class="hover:underline <%= typeof activePage !== 'undefined' && activePage === 'support' ? 'underline' : '' %>">Support</a>
+    <a id="link-topbar-stores" href="/stores" class="hover:underline <%= typeof activePage !== 'undefined' && activePage === 'stores' ? 'underline font-semibold' : '' %>">Find a Store</a>
+  </div>
+</div>
+
+<!-- Main Nav -->
+<nav class="bg-white shadow-sm sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+
+    <!-- Logo -->
+    <a id="link-nav-logo" href="/" class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-nexus-500 rounded-full flex items-center justify-center">
+        <span class="text-white font-bold text-sm">N</span>
+      </div>
+      <span class="text-xl font-bold text-nexus-700">Nexus <span class="text-nexus-500">Mobile</span></span>
+    </a>
+
+    <!-- Nav Links -->
+    <div class="hidden md:flex items-center gap-6 text-sm font-medium">
+      <a id="link-nav-plans" href="/plans" class="<%= typeof activePage !== 'undefined' && activePage === 'plans' ? 'text-nexus-500 border-b-2 border-nexus-500 pb-1' : 'text-gray-600 hover:text-nexus-500' %>">Plans</a>
+      <a id="link-nav-devices" href="/devices" class="<%= typeof activePage !== 'undefined' && activePage === 'devices' ? 'text-nexus-500 border-b-2 border-nexus-500 pb-1' : 'text-gray-600 hover:text-nexus-500' %>">Devices</a>
+      <a id="link-nav-deals" href="/deals" class="<%= typeof activePage !== 'undefined' && activePage === 'deals' ? 'text-nexus-500 border-b-2 border-nexus-500 pb-1' : 'text-gray-600 hover:text-nexus-500' %>">Deals</a>
+      <a id="link-nav-coverage" href="/coverage" class="<%= typeof activePage !== 'undefined' && activePage === 'coverage' ? 'text-nexus-500 border-b-2 border-nexus-500 pb-1' : 'text-gray-600 hover:text-nexus-500' %>">Coverage</a>
+      <a id="link-nav-support" href="/support" class="<%= typeof activePage !== 'undefined' && activePage === 'support' ? 'text-nexus-500 border-b-2 border-nexus-500 pb-1' : 'text-gray-600 hover:text-nexus-500' %>">Support</a>
+    </div>
+
+    <!-- Auth Actions -->
+    <div class="flex items-center gap-3">
+      <% if (user) { %>
+        <a id="link-nav-account" href="/account" class="text-sm text-gray-600 hover:text-nexus-500 font-medium">
+          My Account
+        </a>
+        <a id="link-nav-logout" href="/logout" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-md text-gray-700 font-medium transition">
+          Log Out
+        </a>
+      <% } else { %>
+        <a id="link-nav-login" href="/login" class="text-sm text-gray-600 hover:text-nexus-500 font-medium">Log In</a>
+        <a id="link-nav-get-started" href="/checkout/plan" class="text-sm bg-nexus-500 hover:bg-nexus-600 text-white px-4 py-1.5 rounded-md font-medium transition">
+          Get Started
+        </a>
+      <% } %>
+    </div>
+
+  </div>
+</nav>
+
+<!-- Page Content Wrapper -->
+<main class="flex-1">

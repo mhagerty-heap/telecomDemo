@@ -1,0 +1,264 @@
+<%- include('partials/header') %>
+
+<!-- Hero banner -->
+<section class="bg-gradient-to-br from-nexus-900 to-nexus-700 text-white py-14 px-4 text-center">
+  <span class="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-4 uppercase tracking-widest">
+    Limited Time Offers
+  </span>
+  <h1 class="text-4xl font-extrabold mb-3">Deals & Promotions</h1>
+  <p class="text-blue-100 text-lg max-w-xl mx-auto">New phones, lower bills, and better plans — all in one place. Offers end soon.</p>
+</section>
+
+<!-- Filter tabs -->
+<div class="bg-white border-b sticky top-16 z-40">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="flex gap-1 overflow-x-auto py-0 text-sm font-medium">
+      <% ['All Deals', 'Phones', 'Plans', 'Accessories', 'Trade-In'].forEach((tab, i) => { %>
+        <button id="btn-deals-filter-<%= tab.toLowerCase().replace(/\s+/g, '-') %>" onclick="filterDeals('<%= tab %>', this)"
+          class="deal-tab px-5 py-4 border-b-2 whitespace-nowrap transition
+            <%= i === 0 ? 'border-nexus-500 text-nexus-600' : 'border-transparent text-gray-500 hover:text-gray-800' %>">
+          <%= tab %>
+        </button>
+      <% }) %>
+    </div>
+  </div>
+</div>
+
+<section class="py-12 px-4 bg-gray-50">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Featured hero deal -->
+    <div class="deal-item bg-gradient-to-r from-nexus-600 to-nexus-800 text-white rounded-2xl p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6"
+      data-category="Phones">
+      <div>
+        <span class="inline-block bg-white/20 text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-widest">Best Deal</span>
+        <h2 class="text-3xl font-extrabold mb-2">iPhone 16 Pro — $0 down</h2>
+        <p class="text-blue-100 mb-4">Get the iPhone 16 Pro on 24-month installments with a new Unlimited line. No trade-in required.</p>
+        <div class="flex flex-wrap gap-3 text-xs font-medium">
+          <span class="bg-white/20 px-3 py-1 rounded-full">$41.62/mo × 24</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">New line required</span>
+          <span class="bg-white/20 px-3 py-1 rounded-full">Ends Jul 31</span>
+        </div>
+      </div>
+      <div class="text-center flex-shrink-0">
+        <div class="text-7xl mb-3">📱</div>
+        <a href="/checkout/plan" id="btn-deal-cta-featured"
+          class="inline-block bg-white text-nexus-700 font-bold px-6 py-3 rounded-xl hover:bg-blue-50 transition">
+          Claim Deal →
+        </a>
+      </div>
+    </div>
+
+    <!-- Deal grid -->
+    <div id="deal-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+
+      <% [
+        {
+          category: 'Plans',
+          badge: 'New',
+          badgeColor: 'bg-nexus-500',
+          emoji: '⚡',
+          title: 'Unlimited+ for $55',
+          subtitle: 'Get Unlimited+ pricing when you add 2+ lines.',
+          original: '$75',
+          current: '$55',
+          unit: '/line/mo',
+          expiry: 'Jul 15, 2025',
+          cta: 'Get This Plan',
+          href: '/plans/unlimited-plus'
+        },
+        {
+          category: 'Phones',
+          badge: 'Hot',
+          badgeColor: 'bg-red-500',
+          emoji: '📱',
+          title: 'Samsung S25 Ultra — $200 off',
+          subtitle: 'Trade in any Samsung S-series and save $200 instantly.',
+          original: '$1,299',
+          current: '$1,099',
+          unit: '',
+          expiry: 'Aug 1, 2025',
+          cta: 'Shop Now',
+          href: '/devices/samsung-s25-ultra'
+        },
+        {
+          category: 'Plans',
+          badge: 'Popular',
+          badgeColor: 'bg-green-500',
+          emoji: '👨‍👩‍👧‍👦',
+          title: 'Family Plan — 4 lines for $160',
+          subtitle: 'Switch your whole family and save up to $60/mo vs. individual plans.',
+          original: '$220',
+          current: '$160',
+          unit: '/mo for 4 lines',
+          expiry: 'Ongoing',
+          cta: 'View Family Plans',
+          href: '/plans'
+        },
+        {
+          category: 'Trade-In',
+          badge: 'Trade-In',
+          badgeColor: 'bg-purple-500',
+          emoji: '🔄',
+          title: 'Get up to $800 for your old phone',
+          subtitle: 'Trade in your current device and get credit toward any new phone or plan.',
+          original: null,
+          current: 'Up to $800',
+          unit: ' credit',
+          expiry: 'Jul 31, 2025',
+          cta: 'Check Trade-In Value',
+          href: '/devices'
+        },
+        {
+          category: 'Phones',
+          badge: 'Value',
+          badgeColor: 'bg-yellow-500',
+          emoji: '📱',
+          title: 'Pixel 9 Pro — 6 months free',
+          subtitle: 'Buy a Pixel 9 Pro and get 6 months of Unlimited+ free.',
+          original: null,
+          current: '$999',
+          unit: ' + 6 mo free',
+          expiry: 'Jul 20, 2025',
+          cta: 'Get Pixel 9 Pro',
+          href: '/devices/pixel-9-pro'
+        },
+        {
+          category: 'Accessories',
+          badge: 'Bundle',
+          badgeColor: 'bg-teal-500',
+          emoji: '🔌',
+          title: 'Hotspot Pro — 50% off',
+          subtitle: 'Add our Nexus Mobile Hotspot Pro to any plan and save 50%.',
+          original: '$99',
+          current: '$49',
+          unit: '',
+          expiry: 'While supplies last',
+          cta: 'Add to Cart',
+          href: '/devices/hotspot-pro'
+        },
+        {
+          category: 'Plans',
+          badge: 'New',
+          badgeColor: 'bg-nexus-500',
+          emoji: '🌎',
+          title: 'Free international calling',
+          subtitle: 'Upgrade to Unlimited+ and get free calls to 30+ countries included.',
+          original: null,
+          current: '$75',
+          unit: '/mo',
+          expiry: 'Ongoing',
+          cta: 'Upgrade Now',
+          href: '/plans/unlimited-plus'
+        },
+        {
+          category: 'Trade-In',
+          badge: 'Trade-In',
+          badgeColor: 'bg-purple-500',
+          emoji: '📱',
+          title: 'iPhone 15 trade-in: $500 off',
+          subtitle: 'Trade in a working iPhone 15 (any model) toward a new iPhone 16.',
+          original: '$799',
+          current: '$299',
+          unit: ' after trade-in',
+          expiry: 'Jul 31, 2025',
+          cta: 'Trade In Now',
+          href: '/devices/iphone-16'
+        },
+        {
+          category: 'Accessories',
+          badge: 'Free',
+          badgeColor: 'bg-green-500',
+          emoji: '📦',
+          title: 'Free case with any phone',
+          subtitle: 'Add any phone to your plan and receive a free protective case.',
+          original: '$29',
+          current: 'Free',
+          unit: '',
+          expiry: 'Aug 15, 2025',
+          cta: 'Shop Phones',
+          href: '/devices'
+        }
+      ].forEach((deal, i) => { %>
+        <div class="deal-item bg-white border rounded-2xl p-5 flex flex-col hover:shadow-md transition"
+          data-category="<%= deal.category %>">
+          <div class="flex items-start justify-between mb-3">
+            <span class="text-xs font-bold text-white px-2.5 py-1 rounded-full <%= deal.badgeColor %>">
+              <%= deal.badge %>
+            </span>
+            <span class="text-xs text-gray-400">Ends <%= deal.expiry %></span>
+          </div>
+          <div class="text-4xl mb-3"><%= deal.emoji %></div>
+          <h3 class="font-bold text-gray-900 mb-1"><%= deal.title %></h3>
+          <p class="text-sm text-gray-400 mb-4 flex-1"><%= deal.subtitle %></p>
+          <div class="flex items-end justify-between border-t pt-3 mt-auto">
+            <div>
+              <% if (deal.original) { %>
+                <div class="text-xs text-gray-400 line-through"><%= deal.original %></div>
+              <% } %>
+              <div class="text-xl font-extrabold text-nexus-600"><%= deal.current %><span class="text-sm font-normal text-gray-400"><%= deal.unit %></span></div>
+            </div>
+            <a href="<%= deal.href %>" id="btn-deal-cta-<%= i %>"
+              class="bg-nexus-500 hover:bg-nexus-600 text-white text-xs font-bold px-4 py-2 rounded-lg transition">
+              <%= deal.cta %>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- No results -->
+    <div id="no-deals" class="hidden text-center py-12 text-gray-400">
+      <div class="text-4xl mb-3">🔍</div>
+      <p>No deals in this category right now.</p>
+      <button id="link-deals-show-all" onclick="filterDeals('All Deals', document.querySelector('.deal-tab'))"
+        class="mt-3 text-nexus-500 hover:underline text-sm">Show all deals</button>
+    </div>
+
+  </div>
+</section>
+
+<!-- Referral CTA -->
+<section class="py-12 px-4 bg-white border-t">
+  <div class="max-w-4xl mx-auto text-center">
+    <div class="text-4xl mb-4">🎁</div>
+    <h2 class="text-2xl font-extrabold text-gray-900 mb-2">Refer a friend — earn $50</h2>
+    <p class="text-gray-500 mb-6">For every friend who joins Nexus Mobile, you both get a $50 account credit.</p>
+    <a href="/account" id="btn-deals-referral-share" class="inline-block bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-8 py-3 rounded-xl transition">
+      Get Your Referral Link
+    </a>
+  </div>
+</section>
+
+<!-- Legal fine print -->
+<section class="py-6 px-4 bg-gray-50 border-t">
+  <div class="max-w-6xl mx-auto text-xs text-gray-400 leading-relaxed">
+    *All offers subject to change without notice. New line activation required for phone deals unless otherwise stated.
+    Trade-in values vary based on device condition. Credit applied over 24 months. This is a demo site — no actual purchases are processed.
+  </div>
+</section>
+
+<script>
+  function filterDeals(category, btn) {
+    // Update tab styles
+    document.querySelectorAll('.deal-tab').forEach(t => {
+      t.classList.remove('border-nexus-500', 'text-nexus-600');
+      t.classList.add('border-transparent', 'text-gray-500');
+    });
+    if (btn) {
+      btn.classList.add('border-nexus-500', 'text-nexus-600');
+      btn.classList.remove('border-transparent', 'text-gray-500');
+    }
+
+    const items = document.querySelectorAll('.deal-item');
+    let visible = 0;
+    items.forEach(item => {
+      const match = category === 'All Deals' || item.dataset.category === category;
+      item.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    document.getElementById('no-deals').classList.toggle('hidden', visible > 0);
+  }
+</script>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,260 @@
+<%- include('../partials/header') %>
+
+<!-- Page Header -->
+<section class="bg-gradient-to-br from-nexus-900 to-nexus-700 text-white py-14 px-4 text-center">
+  <h1 class="text-4xl font-extrabold mb-3">Simple, honest pricing</h1>
+  <p class="text-blue-100 text-lg max-w-xl mx-auto">No contracts. No hidden fees. Taxes always included.</p>
+</section>
+
+<!-- Toggle: Individual / Family -->
+<div class="bg-white border-b py-5 px-4">
+  <div class="max-w-5xl mx-auto flex justify-center">
+    <div class="inline-flex bg-gray-100 rounded-lg p-1 text-sm font-medium">
+      <button id="btn-individual" onclick="setTab('individual')"
+        class="px-5 py-2 rounded-md bg-nexus-500 text-white transition">Individual</button>
+      <button id="btn-family" onclick="setTab('family')"
+        class="px-5 py-2 rounded-md text-gray-600 hover:text-gray-900 transition">Family (save up to 30%)</button>
+    </div>
+  </div>
+</div>
+
+<!-- Plan Grid -->
+<section class="bg-gray-50 py-14 px-4">
+  <div class="max-w-6xl mx-auto">
+
+    <!-- Individual pricing (default) -->
+    <div id="tab-individual">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <% plans.forEach(plan => { %>
+          <div class="plan-card bg-white rounded-2xl shadow-sm border flex flex-col <%= plan.featured ? 'featured' : '' %>">
+            <% if (plan.featured) { %>
+              <div class="bg-nexus-500 text-white text-xs font-bold text-center py-1.5 rounded-t-2xl tracking-wide">MOST POPULAR</div>
+            <% } else { %>
+              <div class="h-7"></div>
+            <% } %>
+            <div class="p-6 flex flex-col flex-1">
+              <h2 class="text-xl font-bold text-gray-900"><%= plan.name %></h2>
+              <p class="text-gray-400 text-sm mt-1 mb-5"><%= plan.tagline %></p>
+              <div class="mb-5">
+                <span class="text-4xl font-extrabold text-nexus-600">$<%= plan.price %></span>
+                <span class="text-gray-400 text-sm">/line/mo</span>
+              </div>
+              <div class="text-sm font-semibold text-gray-700 mb-3">
+                <%= plan.data %> <%= plan.dataGB ? 'high-speed data' : 'data' %>
+              </div>
+              <ul class="space-y-2.5 text-sm text-gray-600 mb-8 flex-1">
+                <% plan.features.forEach(f => { %>
+                  <li class="flex items-start gap-2">
+                    <svg class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                    </svg>
+                    <%= f %>
+                  </li>
+                <% }) %>
+              </ul>
+              <a href="/checkout/plan?planId=<%= plan.id %>" id="link-plan-choose-<%= plan.id %>"
+                class="block text-center py-3 rounded-xl font-bold text-sm transition
+                  <%= plan.featured ? 'bg-nexus-500 text-white hover:bg-nexus-600' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' %>">
+                Choose <%= plan.name %>
+              </a>
+              <a href="/plans/<%= plan.id %>" id="link-plan-details-<%= plan.id %>" class="block text-center mt-2 text-xs text-nexus-500 hover:underline">
+                See full details →
+              </a>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+
+    <!-- Family pricing -->
+    <div id="tab-family" class="hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <% plans.forEach(plan => { %>
+          <% if (plan.id !== 'prepaid') { %>
+            <div class="plan-card bg-white rounded-2xl shadow-sm border flex flex-col <%= plan.featured ? 'featured' : '' %>">
+              <% if (plan.featured) { %>
+                <div class="bg-nexus-500 text-white text-xs font-bold text-center py-1.5 rounded-t-2xl tracking-wide">MOST POPULAR</div>
+              <% } else { %>
+                <div class="h-7"></div>
+              <% } %>
+              <div class="p-6 flex flex-col flex-1">
+                <h2 class="text-xl font-bold text-gray-900"><%= plan.name %></h2>
+                <p class="text-gray-400 text-sm mt-1 mb-5"><%= plan.tagline %></p>
+                <div class="mb-1">
+                  <span class="text-4xl font-extrabold text-nexus-600">$<%= Math.round(plan.price * 0.75) %></span>
+                  <span class="text-gray-400 text-sm">/line/mo</span>
+                </div>
+                <div class="text-xs text-green-600 font-semibold mb-5">Save $<%= Math.round(plan.price * 0.25) %>/line with 4 lines</div>
+                <div class="text-sm font-semibold text-gray-700 mb-3">
+                  <%= plan.data %> <%= plan.dataGB ? 'high-speed data' : 'data' %>
+                </div>
+                <ul class="space-y-2.5 text-sm text-gray-600 mb-8 flex-1">
+                  <% plan.features.forEach(f => { %>
+                    <li class="flex items-start gap-2">
+                      <svg class="w-4 h-4 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                      </svg>
+                      <%= f %>
+                    </li>
+                  <% }) %>
+                </ul>
+                <a href="/checkout/plan?planId=<%= plan.id %>" id="link-plan-family-choose-<%= plan.id %>"
+                  class="block text-center py-3 rounded-xl font-bold text-sm transition
+                    <%= plan.featured ? 'bg-nexus-500 text-white hover:bg-nexus-600' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' %>">
+                  Choose <%= plan.name %>
+                </a>
+              </div>
+            </div>
+          <% } else { %>
+            <div class="bg-gray-50 border border-dashed rounded-2xl flex flex-col items-center justify-center p-6 text-center text-gray-400">
+              <div class="text-2xl mb-2">🚫</div>
+              <div class="text-sm font-medium">Prepaid not available on family plans</div>
+            </div>
+          <% } %>
+        <% }) %>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Feature Comparison Table -->
+<section class="py-14 px-4 bg-white">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-2xl font-extrabold text-gray-900 text-center mb-8">Compare plan features</h2>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm border-collapse">
+        <thead>
+          <tr class="border-b-2 border-gray-200">
+            <th class="text-left py-3 px-4 text-gray-500 font-medium w-1/3">Feature</th>
+            <% plans.forEach(plan => { %>
+              <th class="text-center py-3 px-4 font-bold text-gray-900 <%= plan.featured ? 'text-nexus-600' : '' %>">
+                <%= plan.name %>
+              </th>
+            <% }) %>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-gray-600">Monthly price</td>
+            <% plans.forEach(plan => { %>
+              <td class="text-center py-3 px-4 font-semibold text-nexus-600">$<%= plan.price %>/mo</td>
+            <% }) %>
+          </tr>
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-gray-600">Data</td>
+            <% plans.forEach(plan => { %>
+              <td class="text-center py-3 px-4"><%= plan.data %></td>
+            <% }) %>
+          </tr>
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-gray-600">Mobile hotspot</td>
+            <% plans.forEach(plan => { %>
+              <td class="text-center py-3 px-4">
+                <% if (plan.hotspot) { %>
+                  <span class="text-green-600 font-medium"><%= plan.hotspotGB %>GB</span>
+                <% } else { %>
+                  <span class="text-gray-300">—</span>
+                <% } %>
+              </td>
+            <% }) %>
+          </tr>
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-gray-600">Streaming quality</td>
+            <% plans.forEach(plan => { %>
+              <td class="text-center py-3 px-4"><%= plan.streams %></td>
+            <% }) %>
+          </tr>
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-gray-600">International calling</td>
+            <% plans.forEach(plan => { %>
+              <td class="text-center py-3 px-4">
+                <% if (plan.international) { %>
+                  <svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <% } else { %>
+                  <span class="text-gray-300">—</span>
+                <% } %>
+              </td>
+            <% }) %>
+          </tr>
+          <tr class="border-b border-gray-100 hover:bg-gray-50">
+            <td class="py-3 px-4 text-gray-600">Multi-line discounts</td>
+            <% plans.forEach(plan => { %>
+              <td class="text-center py-3 px-4">
+                <% if (plan.lines_discount) { %>
+                  <svg class="w-5 h-5 text-green-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <% } else { %>
+                  <span class="text-gray-300">—</span>
+                <% } %>
+              </td>
+            <% }) %>
+          </tr>
+          <tr class="hover:bg-gray-50">
+            <td class="py-4 px-4"></td>
+            <% plans.forEach(plan => { %>
+              <td class="text-center py-4 px-4">
+                <a href="/checkout/plan?planId=<%= plan.id %>" id="link-compare-choose-<%= plan.id %>"
+                  class="inline-block px-4 py-2 rounded-lg text-xs font-bold transition
+                    <%= plan.featured ? 'bg-nexus-500 text-white hover:bg-nexus-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+                  Choose
+                </a>
+              </td>
+            <% }) %>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="py-14 px-4 bg-gray-50">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-2xl font-extrabold text-gray-900 text-center mb-8">Frequently asked questions</h2>
+    <div class="space-y-3" id="faq">
+
+      <% [
+        { q: 'Are there contracts or commitments?', a: 'No contracts, ever. All Nexus Mobile plans are month-to-month. You can cancel or change your plan at any time.' },
+        { q: 'Do taxes and fees come extra?', a: 'No. The price you see is the price you pay — taxes and regulatory fees are always included.' },
+        { q: 'Can I keep my current phone number?', a: 'Yes. Porting your existing number to Nexus Mobile is free and usually completes within 30 minutes.' },
+        { q: 'What happens if I use all my hotspot data?', a: 'After your hotspot allowance is used, hotspot speeds are reduced to 600kbps for the rest of the billing cycle. Your on-device data is unaffected.' },
+        { q: 'Can I switch plans anytime?', a: 'Yes. You can upgrade or downgrade your plan from your account dashboard. Changes take effect immediately.' }
+      ].forEach((item, i) => { %>
+        <div class="bg-white border rounded-xl overflow-hidden">
+          <button onclick="toggleFaq(<%= i %>)" id="btn-faq-<%= i %>"
+            class="w-full text-left px-5 py-4 font-semibold text-gray-800 flex justify-between items-center hover:bg-gray-50 transition">
+            <%= item.q %>
+            <svg id="faq-icon-<%= i %>" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <div id="faq-body-<%= i %>" class="hidden px-5 pb-4 text-sm text-gray-500 leading-relaxed">
+            <%= item.a %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<script>
+  function setTab(tab) {
+    document.getElementById('tab-individual').classList.toggle('hidden', tab !== 'individual');
+    document.getElementById('tab-family').classList.toggle('hidden', tab !== 'family');
+    document.getElementById('btn-individual').className = tab === 'individual'
+      ? 'px-5 py-2 rounded-md bg-nexus-500 text-white transition'
+      : 'px-5 py-2 rounded-md text-gray-600 hover:text-gray-900 transition';
+    document.getElementById('btn-family').className = tab === 'family'
+      ? 'px-5 py-2 rounded-md bg-nexus-500 text-white transition'
+      : 'px-5 py-2 rounded-md text-gray-600 hover:text-gray-900 transition';
+  }
+
+  function toggleFaq(i) {
+    const body = document.getElementById('faq-body-' + i);
+    const icon = document.getElementById('faq-icon-' + i);
+    body.classList.toggle('hidden');
+    icon.style.transform = body.classList.contains('hidden') ? '' : 'rotate(180deg)';
+  }
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,84 @@
+<%- include('../partials/header') %>
+<%- include('../partials/checkout_steps') %>
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Choose your plan</h1>
+  <p class="text-gray-500 mb-8">All plans include unlimited talk & text. No contracts.</p>
+
+  <form action="/checkout/plan" method="POST">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+      <% plans.forEach(plan => { %>
+        <label class="plan-card cursor-pointer bg-white rounded-2xl border-2 p-5 flex flex-col transition
+          <%= plan.featured ? 'border-nexus-400' : 'border-gray-200' %>"
+          id="card-<%= plan.id %>">
+          <input type="radio" name="planId" value="<%= plan.id %>"
+            class="sr-only"
+            onchange="selectPlan('<%= plan.id %>')"
+            <%= (selectedPlanId === plan.id || (plan.featured && !selectedPlanId)) ? 'checked' : '' %>>
+          <% if (plan.featured) { %>
+            <span class="bg-nexus-100 text-nexus-700 text-xs font-bold px-2 py-0.5 rounded-full self-start mb-3">Popular</span>
+          <% } else { %>
+            <div class="mb-6"></div>
+          <% } %>
+          <h3 class="font-bold text-gray-900 text-lg"><%= plan.name %></h3>
+          <p class="text-gray-400 text-xs mb-3"><%= plan.tagline %></p>
+          <div class="text-3xl font-extrabold text-nexus-600 mb-4">$<%= plan.price %><span class="text-sm font-normal text-gray-400">/mo</span></div>
+          <ul class="space-y-1.5 text-xs text-gray-500 flex-1">
+            <% plan.features.slice(0,4).forEach(f => { %>
+              <li class="flex items-start gap-1.5">
+                <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <%= f %>
+              </li>
+            <% }) %>
+          </ul>
+          <div class="mt-4 flex items-center gap-2">
+            <div id="check-<%= plan.id %>" class="w-5 h-5 rounded-full border-2 border-nexus-400 flex items-center justify-center
+              <%= (selectedPlanId === plan.id || (plan.featured && !selectedPlanId)) ? 'bg-nexus-500 border-nexus-500' : '' %>">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+            <span class="text-xs font-medium text-gray-600">Select</span>
+          </div>
+        </label>
+      <% }) %>
+    </div>
+
+    <div class="flex justify-end">
+      <button type="submit" id="btn-checkout-plan-continue"
+        class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-8 py-3 rounded-xl transition text-base">
+        Continue to Device →
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  // Pre-select from query param or default to featured
+  const preselect = '<%= selectedPlanId %>' || 'unlimited';
+  if (preselect) selectPlan(preselect);
+
+  function selectPlan(id) {
+    const allIds = ['basic', 'unlimited', 'unlimited-plus', 'prepaid'];
+    allIds.forEach(pid => {
+      const card = document.getElementById('card-' + pid);
+      const check = document.getElementById('check-' + pid);
+      if (!card) return;
+      if (pid === id) {
+        card.classList.add('border-nexus-500', 'shadow-md');
+        card.classList.remove('border-gray-200', 'border-nexus-400');
+        check.classList.add('bg-nexus-500', 'border-nexus-500');
+        card.querySelector('input').checked = true;
+      } else {
+        card.classList.remove('border-nexus-500', 'shadow-md');
+        card.classList.add('border-gray-200');
+        card.classList.remove('border-nexus-400');
+        check.classList.remove('bg-nexus-500', 'border-nexus-500');
+      }
+    });
+  }
+</script>
+
+<%- include('../partials/footer') %>

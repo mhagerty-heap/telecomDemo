@@ -1,0 +1,86 @@
+<%- include('../partials/header') %>
+<%- include('../partials/account_nav') %>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-2xl font-extrabold text-gray-900 mb-6">My Plan</h1>
+
+  <% if (upgraded) { %>
+    <div class="bg-green-50 border border-green-200 rounded-xl px-5 py-4 mb-6 flex items-center gap-3 text-green-700">
+      <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+      <span class="font-medium">Your plan has been updated successfully!</span>
+    </div>
+  <% } %>
+
+  <!-- Current plan -->
+  <div class="bg-white border-2 border-nexus-400 rounded-2xl p-6 mb-8">
+    <div class="flex items-start justify-between mb-4">
+      <div>
+        <span class="text-xs font-bold text-nexus-500 uppercase tracking-wide">Current Plan</span>
+        <h2 class="text-2xl font-extrabold text-gray-900 mt-1">Nexus <%= account.plan.name %></h2>
+        <p class="text-gray-400 text-sm mt-0.5">Renews <%= account.plan.renewalDate %></p>
+      </div>
+      <div class="text-right">
+        <div class="text-3xl font-extrabold text-nexus-600">$<%= account.plan.price %></div>
+        <div class="text-xs text-gray-400">/line/mo</div>
+      </div>
+    </div>
+    <div class="grid grid-cols-3 gap-4 mt-2">
+      <div class="bg-gray-50 rounded-xl p-3 text-center">
+        <div class="text-sm font-bold text-gray-800">Unlimited</div>
+        <div class="text-xs text-gray-400 mt-0.5">Data</div>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-3 text-center">
+        <div class="text-sm font-bold text-gray-800">15 GB</div>
+        <div class="text-xs text-gray-400 mt-0.5">Hotspot</div>
+      </div>
+      <div class="bg-gray-50 rounded-xl p-3 text-center">
+        <div class="text-sm font-bold text-gray-800">HD</div>
+        <div class="text-xs text-gray-400 mt-0.5">Streaming</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upgrade options -->
+  <h2 class="text-lg font-bold text-gray-900 mb-4">Available upgrades</h2>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+    <% plans.filter(p => p.id !== account.plan.id && p.id !== 'prepaid').forEach(plan => { %>
+      <div class="bg-white border rounded-2xl p-5 flex flex-col <%= plan.featured ? 'border-nexus-300' : '' %>">
+        <% if (plan.price > account.plan.price) { %>
+          <span class="text-xs font-bold text-purple-600 bg-purple-50 px-2 py-0.5 rounded-full self-start mb-3">Upgrade</span>
+        <% } else { %>
+          <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-0.5 rounded-full self-start mb-3">Downgrade</span>
+        <% } %>
+        <h3 class="font-bold text-gray-900"><%= plan.name %></h3>
+        <p class="text-xs text-gray-400 mb-3"><%= plan.tagline %></p>
+        <div class="text-2xl font-extrabold text-nexus-600 mb-4">$<%= plan.price %><span class="text-sm font-normal text-gray-400">/mo</span></div>
+        <ul class="space-y-1.5 text-xs text-gray-500 flex-1 mb-4">
+          <% plan.features.slice(0,4).forEach(f => { %>
+            <li class="flex items-start gap-1.5">
+              <svg class="w-3.5 h-3.5 text-green-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <%= f %>
+            </li>
+          <% }) %>
+        </ul>
+        <form action="/account/plan/upgrade" method="POST">
+          <input type="hidden" name="planId" value="<%= plan.id %>">
+          <button type="submit" id="link-plan-upgrade-<%= plan.id %>"
+            class="w-full py-2.5 rounded-xl text-sm font-bold transition
+              <%= plan.price > account.plan.price ? 'bg-nexus-500 text-white hover:bg-nexus-600' : 'bg-gray-100 text-gray-700 hover:bg-gray-200' %>">
+            Switch to <%= plan.name %>
+          </button>
+        </form>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Prepaid note -->
+  <div class="bg-gray-50 border border-dashed rounded-xl p-4 text-sm text-gray-500 text-center">
+    Looking for prepaid? <a href="/plans/prepaid" id="link-plan-view-prepaid" class="text-nexus-500 hover:underline font-medium">View the Prepaid plan →</a>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

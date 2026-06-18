@@ -1,0 +1,109 @@
+<%- include('../partials/header') %>
+
+<!-- Breadcrumb -->
+<div class="bg-white border-b px-4 py-3">
+  <div class="max-w-5xl mx-auto text-sm text-gray-500">
+    <a href="/plans" class="hover:text-nexus-500">Plans</a>
+    <span class="mx-2">›</span>
+    <span class="text-gray-800 font-medium"><%= plan.name %></span>
+  </div>
+</div>
+
+<!-- Hero -->
+<section class="bg-gradient-to-br from-nexus-900 to-nexus-700 text-white py-14 px-4">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+    <div>
+      <% if (plan.featured) { %>
+        <span class="inline-block bg-white/20 text-white text-xs font-bold px-3 py-1 rounded-full mb-3 uppercase tracking-wide">Most Popular</span>
+      <% } %>
+      <h1 class="text-4xl font-extrabold mb-2">Nexus <%= plan.name %></h1>
+      <p class="text-blue-100 text-lg mb-4"><%= plan.tagline %></p>
+      <div class="flex items-end gap-2 mb-6">
+        <span class="text-5xl font-extrabold">$<%= plan.price %></span>
+        <span class="text-blue-200 pb-1">/line per month</span>
+      </div>
+      <a href="/checkout/plan?planId=<%= plan.id %>" id="link-plan-detail-hero-cta"
+        class="inline-block bg-white text-nexus-700 font-bold px-8 py-3 rounded-xl hover:bg-blue-50 transition text-lg">
+        Get This Plan
+      </a>
+    </div>
+    <div class="bg-white/10 rounded-2xl p-6 min-w-[220px]">
+      <div class="text-blue-200 text-xs font-bold uppercase tracking-wide mb-3">What's included</div>
+      <ul class="space-y-3 text-sm">
+        <% plan.features.forEach(f => { %>
+          <li class="flex items-start gap-2">
+            <svg class="w-4 h-4 text-green-400 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+            </svg>
+            <%= f %>
+          </li>
+        <% }) %>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- Plan Details -->
+<section class="py-14 px-4 bg-white">
+  <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+
+    <div class="text-center p-6 bg-gray-50 rounded-2xl">
+      <div class="text-4xl mb-3">📶</div>
+      <h3 class="font-bold text-gray-900 mb-1">Data</h3>
+      <div class="text-2xl font-extrabold text-nexus-600"><%= plan.data %></div>
+      <p class="text-gray-400 text-sm mt-1"><%= plan.dataGB ? 'high-speed, then 600kbps' : 'truly unlimited, no slowdowns' %></p>
+    </div>
+
+    <div class="text-center p-6 bg-gray-50 rounded-2xl">
+      <div class="text-4xl mb-3">📡</div>
+      <h3 class="font-bold text-gray-900 mb-1">Mobile Hotspot</h3>
+      <% if (plan.hotspot) { %>
+        <div class="text-2xl font-extrabold text-nexus-600"><%= plan.hotspotGB %>GB</div>
+        <p class="text-gray-400 text-sm mt-1">high-speed, then 600kbps</p>
+      <% } else { %>
+        <div class="text-2xl font-extrabold text-gray-400">Not included</div>
+        <p class="text-gray-400 text-sm mt-1">upgrade to Unlimited to add hotspot</p>
+      <% } %>
+    </div>
+
+    <div class="text-center p-6 bg-gray-50 rounded-2xl">
+      <div class="text-4xl mb-3">🎬</div>
+      <h3 class="font-bold text-gray-900 mb-1">Streaming</h3>
+      <div class="text-2xl font-extrabold text-nexus-600"><%= plan.streams %></div>
+      <p class="text-gray-400 text-sm mt-1">video streaming quality</p>
+    </div>
+
+  </div>
+</section>
+
+<!-- Compare with other plans -->
+<section class="py-14 px-4 bg-gray-50">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-2xl font-extrabold text-gray-900 mb-6">Compare with other plans</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <% plans.filter(p => p.id !== plan.id).forEach(p => { %>
+        <div class="bg-white border rounded-xl p-5 flex flex-col">
+          <h3 class="font-bold text-gray-900 mb-1"><%= p.name %></h3>
+          <p class="text-gray-400 text-xs mb-3"><%= p.tagline %></p>
+          <div class="text-2xl font-extrabold text-nexus-600 mb-4">$<%= p.price %><span class="text-sm font-normal text-gray-400">/mo</span></div>
+          <a href="/plans/<%= p.id %>" id="link-plan-compare-<%= p.id %>" class="mt-auto text-center text-sm text-nexus-500 hover:underline font-medium">View plan →</a>
+        </div>
+      <% }) %>
+    </div>
+    <div class="text-center mt-6">
+      <a href="/plans" id="link-back-all-plans" class="text-nexus-500 font-semibold hover:underline text-sm">← Back to all plans</a>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="py-14 px-4 bg-nexus-500 text-white text-center">
+  <h2 class="text-3xl font-extrabold mb-3">Ready to get started?</h2>
+  <p class="text-blue-100 mb-6">Free SIM included. Switch in minutes.</p>
+  <a href="/checkout/plan?planId=<%= plan.id %>" id="link-plan-detail-bottom-cta"
+    class="inline-block bg-white text-nexus-700 font-bold px-8 py-3 rounded-xl hover:bg-blue-50 transition text-lg">
+    Choose <%= plan.name %> — $<%= plan.price %>/mo
+  </a>
+</section>
+
+<%- include('../partials/footer') %>

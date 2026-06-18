@@ -1,0 +1,94 @@
+[
+  {
+    "id": "basic",
+    "name": "Basic",
+    "tagline": "Just the essentials",
+    "price": 35,
+    "data": "5GB",
+    "dataGB": 5,
+    "hotspot": false,
+    "hotspotGB": 0,
+    "streams": "SD",
+    "international": false,
+    "lines_discount": false,
+    "color": "gray",
+    "featured": false,
+    "features": [
+      "5GB high-speed data",
+      "Unlimited talk & text",
+      "Wi-Fi calling",
+      "Mobile hotspot not included",
+      "SD streaming"
+    ]
+  },
+  {
+    "id": "unlimited",
+    "name": "Unlimited",
+    "tagline": "Our most popular plan",
+    "price": 55,
+    "data": "Unlimited",
+    "dataGB": null,
+    "hotspot": true,
+    "hotspotGB": 15,
+    "streams": "HD",
+    "international": false,
+    "lines_discount": true,
+    "color": "nexus",
+    "featured": true,
+    "features": [
+      "Unlimited high-speed data",
+      "Unlimited talk & text",
+      "15GB mobile hotspot",
+      "HD streaming",
+      "Wi-Fi calling & texting",
+      "Multi-line discounts available"
+    ]
+  },
+  {
+    "id": "unlimited-plus",
+    "name": "Unlimited+",
+    "tagline": "More data, more perks",
+    "price": 75,
+    "data": "Unlimited",
+    "dataGB": null,
+    "hotspot": true,
+    "hotspotGB": 50,
+    "streams": "4K",
+    "international": true,
+    "lines_discount": true,
+    "color": "purple",
+    "featured": false,
+    "features": [
+      "Unlimited premium data",
+      "Unlimited talk & text",
+      "50GB mobile hotspot",
+      "4K UHD streaming",
+      "International calling to 30+ countries",
+      "Wi-Fi calling & texting",
+      "Multi-line discounts available",
+      "Priority network access"
+    ]
+  },
+  {
+    "id": "prepaid",
+    "name": "Prepaid",
+    "tagline": "No contract, no surprises",
+    "price": 25,
+    "data": "3GB",
+    "dataGB": 3,
+    "hotspot": false,
+    "hotspotGB": 0,
+    "streams": "SD",
+    "international": false,
+    "lines_discount": false,
+    "color": "green",
+    "featured": false,
+    "features": [
+      "3GB high-speed data",
+      "Unlimited talk & text",
+      "No contract required",
+      "No credit check",
+      "Auto-refill available"
+    ]
+  }
+]

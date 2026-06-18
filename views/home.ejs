@@ -1,0 +1,179 @@
+<%- include('partials/header') %>
+
+<!-- Hero Section -->
+<section class="bg-gradient-to-br from-nexus-900 via-nexus-700 to-nexus-500 text-white py-24 px-4">
+  <div class="max-w-5xl mx-auto text-center">
+    <span class="inline-block bg-white/20 text-white text-xs font-semibold px-3 py-1 rounded-full mb-4 uppercase tracking-wide">
+      Now with 5G Nationwide
+    </span>
+    <h1 class="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
+      Stay connected.<br/>Pay less.
+    </h1>
+    <p class="text-lg md:text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+      Nexus Mobile gives you blazing fast 5G, flexible plans, and zero hidden fees — all on America's most reliable network.
+    </p>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="/plans" id="link-hero-view-plans" class="bg-white text-nexus-700 font-bold px-8 py-3 rounded-lg hover:bg-blue-50 transition text-lg">
+        View Plans
+      </a>
+      <a href="/coverage" id="link-hero-check-coverage" class="border-2 border-white text-white font-bold px-8 py-3 rounded-lg hover:bg-white/10 transition text-lg">
+        Check Coverage
+      </a>
+    </div>
+    <p class="text-blue-200 text-sm mt-6">No contracts. Cancel anytime. Free SIM included.</p>
+  </div>
+</section>
+
+<!-- Trust Badges -->
+<section class="bg-white border-b py-8 px-4">
+  <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+    <div>
+      <div class="text-3xl font-extrabold text-nexus-500">99%</div>
+      <div class="text-sm text-gray-500 mt-1">Network Uptime</div>
+    </div>
+    <div>
+      <div class="text-3xl font-extrabold text-nexus-500">320M+</div>
+      <div class="text-sm text-gray-500 mt-1">People Covered</div>
+    </div>
+    <div>
+      <div class="text-3xl font-extrabold text-nexus-500">$0</div>
+      <div class="text-sm text-gray-500 mt-1">Activation Fee</div>
+    </div>
+    <div>
+      <div class="text-3xl font-extrabold text-nexus-500">24/7</div>
+      <div class="text-sm text-gray-500 mt-1">Customer Support</div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Plans -->
+<section class="py-16 px-4 bg-gray-50">
+  <div class="max-w-6xl mx-auto">
+    <div class="text-center mb-10">
+      <h2 class="text-3xl font-extrabold text-gray-900">Pick your perfect plan</h2>
+      <p class="text-gray-500 mt-2">All plans include unlimited talk & text. Switch anytime.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <% featuredPlans.forEach(plan => { %>
+        <div class="plan-card bg-white rounded-2xl shadow-sm border p-6 flex flex-col <%= plan.featured ? 'featured' : '' %>">
+          <% if (plan.featured) { %>
+            <span class="bg-nexus-500 text-white text-xs font-bold px-3 py-1 rounded-full self-start mb-4">Most Popular</span>
+          <% } else { %>
+            <div class="mb-8"></div>
+          <% } %>
+          <h3 class="text-xl font-bold text-gray-900"><%= plan.name %></h3>
+          <p class="text-gray-400 text-sm mb-4"><%= plan.tagline %></p>
+          <div class="text-4xl font-extrabold text-nexus-600 mb-1">$<%= plan.price %></div>
+          <div class="text-xs text-gray-400 mb-6">/line per month</div>
+          <ul class="space-y-2 text-sm text-gray-600 mb-8 flex-1">
+            <% plan.features.slice(0,4).forEach(f => { %>
+              <li class="flex items-center gap-2">
+                <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                <%= f %>
+              </li>
+            <% }) %>
+          </ul>
+          <a href="/plans/<%= plan.id %>" id="link-plan-choose-<%= plan.id %>" class="block text-center py-2.5 rounded-lg font-semibold text-sm transition
+            <%= plan.featured ? 'bg-nexus-500 text-white hover:bg-nexus-600' : 'bg-gray-100 text-gray-800 hover:bg-gray-200' %>">
+            Choose <%= plan.name %>
+          </a>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="text-center mt-8">
+      <a href="/plans" id="link-home-compare-plans" class="text-nexus-500 font-semibold hover:underline text-sm">Compare all plans →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Promo Banner -->
+<section class="bg-nexus-500 text-white py-12 px-4">
+  <div class="max-w-4xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <div>
+      <div class="text-xs font-bold uppercase tracking-widest text-blue-200 mb-1">Limited Time Offer</div>
+      <h3 class="text-2xl font-extrabold">Get the iPhone 16 for $0 down</h3>
+      <p class="text-blue-100 text-sm mt-1">With new Unlimited line. 24-month installment plan required.</p>
+    </div>
+    <a href="/deals" id="link-promo-banner-deals" class="flex-shrink-0 bg-white text-nexus-700 font-bold px-6 py-3 rounded-lg hover:bg-blue-50 transition">
+      Shop the Deal
+    </a>
+  </div>
+</section>
+
+<!-- Why Nexus -->
+<section class="py-16 px-4 bg-white">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-3xl font-extrabold text-center text-gray-900 mb-12">Why millions choose Nexus</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
+      <div>
+        <div class="w-14 h-14 bg-nexus-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-7 h-7 text-nexus-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+          </svg>
+        </div>
+        <h4 class="font-bold text-gray-900 mb-2">Blazing Fast 5G</h4>
+        <p class="text-gray-500 text-sm">Access our nationwide 5G network and experience speeds up to 10x faster than 4G LTE.</p>
+      </div>
+      <div>
+        <div class="w-14 h-14 bg-nexus-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-7 h-7 text-nexus-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+        </div>
+        <h4 class="font-bold text-gray-900 mb-2">No Hidden Fees</h4>
+        <p class="text-gray-500 text-sm">The price you see is the price you pay. Taxes and fees always included.</p>
+      </div>
+      <div>
+        <div class="w-14 h-14 bg-nexus-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+          <svg class="w-7 h-7 text-nexus-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+          </svg>
+        </div>
+        <h4 class="font-bold text-gray-900 mb-2">24/7 Support</h4>
+        <p class="text-gray-500 text-sm">Real humans available around the clock by chat, phone, or at 400+ retail stores.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Device Promo -->
+<section class="py-16 px-4 bg-gray-50">
+  <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center gap-12">
+    <div class="flex-1">
+      <span class="text-xs font-bold text-nexus-500 uppercase tracking-widest">New Arrivals</span>
+      <h2 class="text-3xl font-extrabold text-gray-900 mt-2 mb-4">The latest devices, yours to keep.</h2>
+      <p class="text-gray-500 mb-6">Shop our full lineup of smartphones, tablets, and connected devices — with easy monthly installments or buy outright.</p>
+      <a href="/devices" id="link-home-shop-devices" class="inline-block bg-nexus-500 text-white font-bold px-6 py-3 rounded-lg hover:bg-nexus-600 transition">
+        Shop Devices
+      </a>
+    </div>
+    <div class="flex-1 grid grid-cols-2 gap-4">
+      <div class="bg-white rounded-xl p-4 shadow-sm border text-center">
+        <div class="bg-gray-100 rounded-lg h-24 flex items-center justify-center mb-3 text-3xl">📱</div>
+        <div class="font-semibold text-sm">iPhone 16 Pro</div>
+        <div class="text-nexus-500 font-bold text-sm mt-1">From $0/mo</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border text-center">
+        <div class="bg-gray-100 rounded-lg h-24 flex items-center justify-center mb-3 text-3xl">📱</div>
+        <div class="font-semibold text-sm">Samsung S25 Ultra</div>
+        <div class="text-nexus-500 font-bold text-sm mt-1">From $4.16/mo</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border text-center">
+        <div class="bg-gray-100 rounded-lg h-24 flex items-center justify-center mb-3 text-3xl">📱</div>
+        <div class="font-semibold text-sm">Pixel 9</div>
+        <div class="text-nexus-500 font-bold text-sm mt-1">From $2.08/mo</div>
+      </div>
+      <div class="bg-white rounded-xl p-4 shadow-sm border text-center">
+        <div class="bg-gray-100 rounded-lg h-24 flex items-center justify-center mb-3 text-3xl">🔌</div>
+        <div class="font-semibold text-sm">Mobile Hotspot</div>
+        <div class="text-nexus-500 font-bold text-sm mt-1">From $99</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('partials/footer') %>

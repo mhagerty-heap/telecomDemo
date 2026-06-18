@@ -1,0 +1,178 @@
+<%- include('../partials/header') %>
+
+<div class="bg-white border-b px-4 py-3">
+  <div class="max-w-3xl mx-auto text-sm text-gray-500">
+    <a href="/support" class="hover:text-nexus-500">Support</a>
+    <span class="mx-2">›</span>
+    <span class="text-gray-800 font-medium">Contact Us</span>
+  </div>
+</div>
+
+<div class="max-w-3xl mx-auto px-4 py-10">
+
+  <% if (submitted) { %>
+    <!-- Success state -->
+    <div class="text-center py-12">
+      <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-5">
+        <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Message sent!</h1>
+      <p class="text-gray-500 mb-1">We've received your message and will respond within 2 hours.</p>
+      <p class="text-gray-400 text-sm mb-8">A confirmation has been sent to your email address.</p>
+      <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="/support" class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-6 py-3 rounded-xl transition text-sm">
+          Back to Support
+        </a>
+        <a href="/" class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-medium px-6 py-3 rounded-xl transition text-sm">
+          Go to Home
+        </a>
+      </div>
+    </div>
+
+  <% } else { %>
+
+    <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Contact us</h1>
+    <p class="text-gray-500 mb-8">Fill in the form and we'll get back to you within 2 hours. Average response time is 34 minutes.</p>
+
+    <!-- Contact channel cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+      <div class="border rounded-xl p-4 text-center">
+        <div class="text-2xl mb-2">💬</div>
+        <div class="font-semibold text-sm text-gray-800">Live Chat</div>
+        <div class="text-xs text-green-600 font-medium mt-0.5">Available now</div>
+        <button id="btn-contact-live-chat" onclick="alert('Live chat would launch here.')"
+          class="mt-3 w-full text-xs bg-nexus-500 text-white font-bold py-2 rounded-lg hover:bg-nexus-600 transition">
+          Start Chat
+        </button>
+      </div>
+      <div class="border rounded-xl p-4 text-center">
+        <div class="text-2xl mb-2">📞</div>
+        <div class="font-semibold text-sm text-gray-800">Call Us</div>
+        <div class="text-xs text-gray-400 mt-0.5">1-800-NEXUS-1</div>
+        <a href="tel:18006398871" id="link-contact-call"
+          class="mt-3 block w-full text-xs bg-gray-100 text-gray-700 font-bold py-2 rounded-lg hover:bg-gray-200 transition">
+          Call Now
+        </a>
+      </div>
+      <div class="border rounded-xl p-4 text-center bg-nexus-50 border-nexus-200">
+        <div class="text-2xl mb-2">✉️</div>
+        <div class="font-semibold text-sm text-gray-800">Send a Message</div>
+        <div class="text-xs text-gray-400 mt-0.5">Response in ~34 min</div>
+        <div class="mt-3 w-full text-xs bg-nexus-500 text-white font-bold py-2 rounded-lg text-center">
+          Selected
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact form -->
+    <form action="/support/contact" method="POST" novalidate class="bg-white border rounded-2xl p-6 space-y-5">
+
+      <div class="grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="name">Your name</label>
+          <input type="text" id="name" name="name"
+            value="<%= formData.name || '' %>"
+            placeholder="Alex Johnson"
+            class="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition
+              <%= errors.name ? 'border-red-400 bg-red-50' : 'border-gray-300' %>">
+          <% if (errors.name) { %><p class="text-red-500 text-xs mt-1"><%= errors.name %></p><% } %>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1" for="email">Email address</label>
+          <input type="email" id="email" name="email"
+            value="<%= formData.email || '' %>"
+            placeholder="you@example.com"
+            class="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition
+              <%= errors.email ? 'border-red-400 bg-red-50' : 'border-gray-300' %>">
+          <% if (errors.email) { %><p class="text-red-500 text-xs mt-1"><%= errors.email %></p><% } %>
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="topic">Topic</label>
+        <select id="topic" name="topic"
+          class="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition bg-white
+            <%= errors.topic ? 'border-red-400 bg-red-50' : 'border-gray-300' %>">
+          <option value="">— Select a topic —</option>
+          <% [
+            'Billing & Payments',
+            'Network & Coverage',
+            'Device & SIM',
+            'Plan Changes',
+            'Account Access',
+            'Roaming & International',
+            'Other'
+          ].forEach(t => { %>
+            <option value="<%= t %>" <%= formData.topic === t ? 'selected' : '' %>><%= t %></option>
+          <% }) %>
+        </select>
+        <% if (errors.topic) { %><p class="text-red-500 text-xs mt-1"><%= errors.topic %></p><% } %>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="account">Account number <span class="text-gray-400 font-normal">(optional)</span></label>
+        <input type="text" id="account" name="accountNumber"
+          value="<%= formData.accountNumber || '' %>"
+          placeholder="NX-00000000"
+          class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition">
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1" for="message">Message</label>
+        <textarea id="message" name="message" rows="5"
+          placeholder="Please describe your issue in detail. The more information you provide, the faster we can help."
+          class="w-full border rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition resize-none
+            <%= errors.message ? 'border-red-400 bg-red-50' : 'border-gray-300' %>"><%= formData.message || '' %></textarea>
+        <% if (errors.message) { %><p class="text-red-500 text-xs mt-1"><%= errors.message %></p><% } %>
+        <p class="text-xs text-gray-400 mt-1">Minimum 10 characters</p>
+      </div>
+
+      <!-- Callback request -->
+      <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+        <label class="flex items-center gap-3 cursor-pointer">
+          <input type="checkbox" name="callbackRequested" id="callbackRequested" value="1"
+            onchange="toggleCallback()"
+            class="w-4 h-4 accent-nexus-500"
+            <%= formData.callbackRequested ? 'checked' : '' %>>
+          <span class="text-sm font-medium text-gray-700">I'd also like a callback</span>
+        </label>
+        <div id="callbackFields" class="<%= formData.callbackRequested ? '' : 'hidden' %> mt-4 grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Phone number</label>
+            <input type="tel" name="callbackPhone"
+              value="<%= formData.callbackPhone || '' %>"
+              placeholder="(555) 000-0000"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-600 mb-1">Best time to call</label>
+            <select name="callbackTime"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 bg-white">
+              <option>Morning (9am–12pm)</option>
+              <option>Afternoon (12pm–5pm)</option>
+              <option>Evening (5pm–8pm)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" id="btn-contact-send-message"
+        class="w-full bg-nexus-500 hover:bg-nexus-600 text-white font-bold py-3 rounded-xl transition">
+        Send Message
+      </button>
+
+    </form>
+
+  <% } %>
+</div>
+
+<script>
+  function toggleCallback() {
+    const fields = document.getElementById('callbackFields');
+    fields.classList.toggle('hidden', !document.getElementById('callbackRequested').checked);
+  }
+</script>
+
+<%- include('../partials/footer') %>

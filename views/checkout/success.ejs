@@ -1,0 +1,58 @@
+<%- include('../partials/header') %>
+
+<div class="max-w-2xl mx-auto px-4 py-16 text-center">
+
+  <!-- Success Icon -->
+  <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
+    <svg class="w-10 h-10 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+    </svg>
+  </div>
+
+  <h1 class="text-3xl font-extrabold text-gray-900 mb-3">You're all set!</h1>
+  <p class="text-gray-500 text-lg mb-2">Your order has been confirmed.</p>
+  <p class="text-gray-400 text-sm mb-10">A confirmation email has been sent to your inbox. Your SIM card will arrive within 3–5 business days.</p>
+
+  <!-- Order details card -->
+  <div class="bg-white border rounded-2xl p-6 text-left mb-8">
+    <div class="text-xs font-bold text-gray-400 uppercase tracking-wide mb-4">What happens next</div>
+    <div class="space-y-4">
+      <div class="flex items-start gap-4">
+        <div class="w-8 h-8 bg-nexus-100 rounded-full flex items-center justify-center flex-shrink-0 text-nexus-600 font-bold text-sm">1</div>
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">Check your email</div>
+          <div class="text-gray-400 text-xs mt-0.5">Your order confirmation and account setup link are on their way.</div>
+        </div>
+      </div>
+      <div class="flex items-start gap-4">
+        <div class="w-8 h-8 bg-nexus-100 rounded-full flex items-center justify-center flex-shrink-0 text-nexus-600 font-bold text-sm">2</div>
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">Receive your SIM</div>
+          <div class="text-gray-400 text-xs mt-0.5">Your SIM card ships within 1 business day and arrives in 3–5 days.</div>
+        </div>
+      </div>
+      <div class="flex items-start gap-4">
+        <div class="w-8 h-8 bg-nexus-100 rounded-full flex items-center justify-center flex-shrink-0 text-nexus-600 font-bold text-sm">3</div>
+        <div>
+          <div class="font-semibold text-gray-900 text-sm">Activate & connect</div>
+          <div class="text-gray-400 text-xs mt-0.5">Insert your SIM and follow the activation steps in the app — takes about 2 minutes.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions -->
+  <div class="flex flex-col sm:flex-row gap-3 justify-center">
+    <a href="/login" id="link-success-signin"
+      class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-6 py-3 rounded-xl transition">
+      Sign In to My Account
+    </a>
+    <a href="/" id="link-success-home"
+      class="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold px-6 py-3 rounded-xl transition">
+      Back to Home
+    </a>
+  </div>
+
+</div>
+
+<%- include('../partials/footer') %>

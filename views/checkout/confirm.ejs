@@ -1,0 +1,153 @@
+<%- include('../partials/header') %>
+<%- include('../partials/checkout_steps') %>
+
+<div class="max-w-2xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-extrabold text-gray-900 mb-1">Review your order</h1>
+  <p class="text-gray-500 mb-8">Check everything looks right before you submit.</p>
+
+  <% if (!plan) { %>
+    <div class="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6 text-sm text-yellow-700">
+      No plan selected. <a href="/checkout/plan" class="underline font-medium">Go back and choose a plan.</a>
+    </div>
+  <% } %>
+
+  <!-- Order Summary -->
+  <div class="bg-white border rounded-2xl overflow-hidden mb-6">
+    <div class="bg-gray-50 border-b px-5 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">Order Summary</div>
+
+    <!-- Plan row -->
+    <% if (plan) { %>
+      <div class="flex items-center justify-between px-5 py-4 border-b">
+        <div>
+          <div class="font-semibold text-gray-900">Nexus <%= plan.name %> Plan</div>
+          <div class="text-xs text-gray-400 mt-0.5"><%= plan.data %> data · <%= plan.streams %> streaming</div>
+        </div>
+        <div class="font-bold text-nexus-600">$<%= plan.price %>/mo</div>
+      </div>
+    <% } %>
+
+    <!-- Device row -->
+    <% if (device) { %>
+      <div class="flex items-center justify-between px-5 py-4 border-b">
+        <div>
+          <div class="font-semibold text-gray-900"><%= device.name %></div>
+          <div class="text-xs text-gray-400 mt-0.5">24-month installment plan</div>
+        </div>
+        <div class="font-bold text-nexus-600">$<%= device.monthlyPrice %>/mo</div>
+      </div>
+    <% } else { %>
+      <div class="flex items-center justify-between px-5 py-4 border-b">
+        <div>
+          <div class="font-semibold text-gray-900">Bring your own device</div>
+          <div class="text-xs text-gray-400 mt-0.5">Free SIM included</div>
+        </div>
+        <div class="font-bold text-green-600">Free</div>
+      </div>
+    <% } %>
+
+    <!-- SIM / activation -->
+    <div class="flex items-center justify-between px-5 py-4 border-b">
+      <div class="text-sm text-gray-600">SIM card</div>
+      <div class="text-green-600 font-semibold text-sm">Free</div>
+    </div>
+    <div class="flex items-center justify-between px-5 py-4 border-b">
+      <div class="text-sm text-gray-600">Activation fee</div>
+      <div class="text-green-600 font-semibold text-sm">Free</div>
+    </div>
+
+    <!-- Total -->
+    <div class="flex items-center justify-between px-5 py-4 bg-gray-50">
+      <div class="font-bold text-gray-900">Monthly total</div>
+      <div class="font-extrabold text-xl text-nexus-600">
+        $<%= ((plan ? plan.price : 0) + (device && device.monthlyPrice ? device.monthlyPrice : 0)).toFixed(2) %>/mo
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer info summary -->
+  <% if (customer) { %>
+    <div class="bg-white border rounded-2xl overflow-hidden mb-6">
+      <div class="bg-gray-50 border-b px-5 py-3 flex justify-between items-center">
+        <span class="text-xs font-bold text-gray-500 uppercase tracking-wide">Your Information</span>
+        <a href="/checkout/details" id="link-checkout-confirm-edit" class="text-xs text-nexus-500 hover:underline">Edit</a>
+      </div>
+      <div class="px-5 py-4 grid grid-cols-2 gap-3 text-sm">
+        <div>
+          <div class="text-gray-400 text-xs">Name</div>
+          <div class="font-medium text-gray-800"><%= customer.firstName %> <%= customer.lastName %></div>
+        </div>
+        <div>
+          <div class="text-gray-400 text-xs">Email</div>
+          <div class="font-medium text-gray-800"><%= customer.email %></div>
+        </div>
+        <div>
+          <div class="text-gray-400 text-xs">Phone</div>
+          <div class="font-medium text-gray-800"><%= customer.phone %></div>
+        </div>
+        <div>
+          <div class="text-gray-400 text-xs">Address</div>
+          <div class="font-medium text-gray-800"><%= customer.address %>, <%= customer.city %>, <%= customer.state %> <%= customer.zip %></div>
+        </div>
+      </div>
+    </div>
+  <% } %>
+
+  <!-- Payment -->
+  <div class="bg-white border rounded-2xl overflow-hidden mb-8">
+    <div class="bg-gray-50 border-b px-5 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">Payment</div>
+    <div class="px-5 py-5">
+      <p class="text-sm text-gray-500 mb-4">Enter your payment details to complete your order.</p>
+      <div class="grid grid-cols-1 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Card number</label>
+          <input type="text" placeholder="•••• •••• •••• ••••" maxlength="19"
+            class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition"
+            id="cardNumber" oninput="formatCard(this)">
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Expiry</label>
+            <input type="text" placeholder="MM / YY" maxlength="7"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition"
+              oninput="formatExpiry(this)">
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">CVV</label>
+            <input type="text" placeholder="•••" maxlength="4" inputmode="numeric"
+              class="w-full border border-gray-300 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-nexus-500 transition">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Submit -->
+  <form action="/checkout/confirm" method="POST">
+    <div class="flex justify-between">
+      <a href="/checkout/details" id="link-checkout-confirm-back" class="text-gray-500 hover:text-gray-800 font-medium py-3 px-5 rounded-xl border border-gray-200 hover:border-gray-300 transition">
+        ← Back
+      </a>
+      <button type="submit" id="btn-checkout-place-order"
+        class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-8 py-3 rounded-xl transition text-base">
+        Place Order →
+      </button>
+    </div>
+    <p class="text-center text-xs text-gray-400 mt-4">
+      By placing your order you agree to our <a href="#" class="underline">Terms of Service</a>. No charges during demo.
+    </p>
+  </form>
+</div>
+
+<script>
+  function formatCard(input) {
+    let v = input.value.replace(/\D/g, '').slice(0, 16);
+    input.value = v.replace(/(.{4})/g, '$1 ').trim();
+  }
+  function formatExpiry(input) {
+    let v = input.value.replace(/\D/g, '').slice(0, 4);
+    if (v.length >= 3) v = v.slice(0,2) + ' / ' + v.slice(2);
+    input.value = v;
+  }
+</script>
+
+<%- include('../partials/footer') %>

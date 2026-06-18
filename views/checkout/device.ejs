@@ -1,0 +1,107 @@
+<%- include('../partials/header') %>
+<%- include('../partials/checkout_steps') %>
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <h1 class="text-2xl font-extrabold text-gray-900 mb-1">Choose a device</h1>
+  <p class="text-gray-500 mb-8">Optional — bring your own phone or pick a new one.</p>
+
+  <form action="/checkout/device" method="POST">
+
+    <!-- BYOD option -->
+    <label class="flex items-center gap-4 bg-white border-2 rounded-2xl p-5 mb-6 cursor-pointer hover:border-nexus-400 transition"
+      id="card-byod">
+      <input type="radio" name="deviceId" value="" class="sr-only" onchange="selectDevice('byod')" checked>
+      <div id="check-byod" class="w-6 h-6 rounded-full border-2 border-nexus-500 bg-nexus-500 flex items-center justify-center flex-shrink-0">
+        <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+      <div>
+        <div class="font-bold text-gray-900">Bring my own phone</div>
+        <div class="text-sm text-gray-400">Keep your current device. We'll send you a free SIM card.</div>
+      </div>
+      <span class="ml-auto text-green-600 font-bold text-sm">Free</span>
+    </label>
+
+    <!-- Device grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <% devices.forEach(device => { %>
+        <label class="plan-card cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-5 flex flex-col transition"
+          id="card-<%= device.id %>">
+          <input type="radio" name="deviceId" value="<%= device.id %>"
+            class="sr-only" onchange="selectDevice('<%= device.id %>')">
+
+          <% if (device.badge) { %>
+            <span class="bg-nexus-100 text-nexus-700 text-xs font-bold px-2 py-0.5 rounded-full self-start mb-3"><%= device.badge %></span>
+          <% } else { %>
+            <div class="mb-6"></div>
+          <% } %>
+
+          <div class="text-5xl text-center mb-3"><%= device.emoji %></div>
+          <div class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1"><%= device.brand %></div>
+          <h3 class="font-bold text-gray-900 mb-1"><%= device.name %></h3>
+          <p class="text-xs text-gray-400 mb-3 flex-1"><%= device.tagline %></p>
+
+          <div class="border-t pt-3 flex items-end justify-between">
+            <div>
+              <% if (device.monthlyPrice) { %>
+                <div class="text-lg font-extrabold text-nexus-600">$<%= device.monthlyPrice %>/mo</div>
+                <div class="text-xs text-gray-400">or $<%= device.price %> outright</div>
+              <% } else { %>
+                <div class="text-lg font-extrabold text-nexus-600">$<%= device.price %></div>
+              <% } %>
+            </div>
+            <div id="check-<%= device.id %>" class="w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center">
+              <svg class="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+            </div>
+          </div>
+        </label>
+      <% }) %>
+    </div>
+
+    <div class="flex justify-between mt-8">
+      <a href="/checkout/plan" id="link-checkout-device-back" class="text-gray-500 hover:text-gray-800 font-medium py-3 px-5 rounded-xl border border-gray-200 hover:border-gray-300 transition">
+        ← Back
+      </a>
+      <button type="submit" id="btn-checkout-device-continue"
+        class="bg-nexus-500 hover:bg-nexus-600 text-white font-bold px-8 py-3 rounded-xl transition">
+        Continue to Your Info →
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const allDeviceIds = [
+    'byod',
+    <% devices.forEach((d, i) => { %>'<%= d.id %>'<%= i < devices.length - 1 ? ',' : '' %><% }) %>
+  ];
+
+  function selectDevice(id) {
+    allDeviceIds.forEach(did => {
+      const card = document.getElementById('card-' + did);
+      const check = document.getElementById('check-' + did);
+      if (!card || !check) return;
+      if (did === id) {
+        card.classList.add('border-nexus-500', 'shadow-md');
+        card.classList.remove('border-gray-200');
+        check.classList.add('bg-nexus-500', 'border-nexus-500');
+        check.classList.remove('border-gray-300');
+        const input = card.querySelector('input');
+        if (input) input.checked = true;
+      } else {
+        card.classList.remove('border-nexus-500', 'shadow-md');
+        card.classList.add('border-gray-200');
+        check.classList.remove('bg-nexus-500', 'border-nexus-500');
+        check.classList.add('border-gray-300');
+      }
+    });
+  }
+
+  // Init BYOD selected
+  selectDevice('byod');
+</script>
+
+<%- include('../partials/footer') %>

@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+<%- include('../partials/account_nav') %>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <h1 class="text-2xl font-extrabold text-gray-900 mb-6">My Devices</h1>
+
+  <div class="space-y-4 mb-8">
+    <% account.devices.forEach((device, i) => { %>
+      <div class="bg-white border rounded-2xl p-5">
+        <div class="flex items-start justify-between gap-4">
+          <div class="flex items-start gap-4">
+            <div class="text-4xl">📱</div>
+            <div>
+              <h3 class="font-bold text-gray-900"><%= device.name %></h3>
+              <div class="text-xs text-gray-400 mt-0.5 space-y-0.5">
+                <div>IMEI: <%= device.imei %></div>
+                <div>SIM: <%= device.sim %></div>
+              </div>
+              <span class="inline-block mt-2 px-2.5 py-0.5 rounded-full text-xs font-semibold
+                <%= device.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500' %>">
+                <%= device.status %>
+              </span>
+            </div>
+          </div>
+
+          <% if (device.installment) { %>
+            <div class="text-right flex-shrink-0">
+              <div class="text-xs text-gray-400">Monthly payment</div>
+              <div class="text-lg font-bold text-nexus-600">$<%= device.installment.monthlyAmount %></div>
+              <div class="text-xs text-gray-400"><%= device.installment.remaining %> payments left</div>
+            </div>
+          <% } else { %>
+            <div class="text-right flex-shrink-0">
+              <div class="text-xs text-green-600 font-medium">Paid off</div>
+            </div>
+          <% } %>
+        </div>
+
+        <% if (device.installment) { %>
+          <div class="mt-4 pt-4 border-t">
+            <div class="flex justify-between text-xs text-gray-400 mb-1.5">
+              <span>Paid so far: $<%= device.installment.totalPaid %></span>
+              <span><%= device.installment.remaining %> payments remaining</span>
+            </div>
+            <div class="usage-bar">
+              <% const paidMonths = 24 - device.installment.remaining %>
+              <div class="usage-bar-fill" style="width: <%= (paidMonths/24)*100 %>%"></div>
+            </div>
+          </div>
+        <% } %>
+
+        <div class="mt-4 flex flex-wrap gap-2">
+          <a href="/devices" id="link-device-upgrade-<%= i %>" class="px-3 py-1.5 text-xs font-medium bg-nexus-50 text-nexus-600 border border-nexus-200 rounded-lg hover:bg-nexus-100 transition">
+            Upgrade device
+          </a>
+          <button id="btn-device-report-lost-<%= i %>" class="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+            Report lost/stolen
+          </button>
+          <button id="btn-device-manage-sim-<%= i %>" class="px-3 py-1.5 text-xs font-medium bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition">
+            Manage SIM
+          </button>
+        </div>
+      </div>
+    <% }) %>
+  </div>
+
+  <!-- Add device CTA -->
+  <div class="bg-gradient-to-r from-nexus-500 to-nexus-700 text-white rounded-2xl p-6 flex items-center justify-between gap-4">
+    <div>
+      <div class="font-bold text-lg mb-1">Ready for a new device?</div>
+      <div class="text-blue-100 text-sm">Browse the latest phones with easy monthly payments.</div>
+    </div>
+    <a href="/devices" id="link-devices-shop-new" class="flex-shrink-0 bg-white text-nexus-700 font-bold px-5 py-2.5 rounded-xl text-sm hover:bg-blue-50 transition">
+      Shop Devices
+    </a>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

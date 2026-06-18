@@ -1,0 +1,209 @@
+<%- include('../partials/header') %>
+
+<!-- Breadcrumb -->
+<div class="bg-white border-b px-4 py-3">
+  <div class="max-w-5xl mx-auto text-sm text-gray-500">
+    <a href="/devices" class="hover:text-nexus-500">Devices</a>
+    <span class="mx-2">›</span>
+    <span class="text-gray-800 font-medium"><%= device.name %></span>
+  </div>
+</div>
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+
+    <!-- Left: image + colors -->
+    <div>
+      <!-- Main image -->
+      <div class="bg-gray-50 rounded-2xl p-12 text-center mb-4 border">
+        <div id="device-emoji" class="text-8xl transition-all duration-200"><%= device.emoji %></div>
+      </div>
+
+      <!-- Color selector -->
+      <% if (device.colors) { %>
+        <div class="mb-4">
+          <p class="text-sm font-medium text-gray-700 mb-2">
+            Color: <span id="selected-color" class="text-nexus-600"><%= device.colors[0] %></span>
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <% const colorMap = {
+              'Black Titanium': '#3a3a3a', 'White Titanium': '#e8e8e8', 'Natural Titanium': '#c4b49a',
+              'Desert Titanium': '#d4a96a', 'Titanium Black': '#2a2a2a', 'Titanium Gray': '#7a7a7a',
+              'Titanium Blue': '#5b7fa6', 'Titanium White': '#f0f0f0', 'Obsidian': '#1a1a1a',
+              'Porcelain': '#f5f0eb', 'Hazel': '#8b7355', 'Rose Quartz': '#d4a0a0',
+              'Black': '#1a1a1a', 'White': '#f5f5f5', 'Pink': '#f4a7b9', 'Teal': '#4db6ac',
+              'Ultramarine': '#3f51b5', 'Awesome Iceblue': '#87ceeb', 'Awesome Navy': '#1a237e',
+              'Awesome Lilac': '#c8a0d8', 'Midnight Blue': '#191970', 'Pale Lilac': '#dcd0e8'
+            } %>
+            <% device.colors.forEach((color, i) => { %>
+              <button onclick="selectColor('<%= color %>')"
+                id="btn-color-<%= i %>"
+                title="<%= color %>"
+                class="w-8 h-8 rounded-full border-2 transition hover:scale-110
+                  <%= i === 0 ? 'border-nexus-500 ring-2 ring-nexus-200' : 'border-gray-200' %>"
+                style="background-color: <%= colorMap[color] || '#888' %>">
+              </button>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+
+      <!-- Storage selector -->
+      <% if (device.storage) { %>
+        <div>
+          <p class="text-sm font-medium text-gray-700 mb-2">
+            Storage: <span id="selected-storage" class="text-nexus-600"><%= device.storage[0] %></span>
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <% device.storage.forEach((s, i) => { %>
+              <button onclick="selectStorage('<%= s %>', this)" id="btn-storage-<%= i %>"
+                class="px-3 py-1.5 rounded-lg text-sm font-medium border transition
+                  <%= i === 0 ? 'border-nexus-500 text-nexus-600 bg-nexus-50' : 'border-gray-200 text-gray-600 hover:border-nexus-300' %>">
+                <%= s %>
+              </button>
+            <% }) %>
+          </div>
+        </div>
+      <% } %>
+    </div>
+
+    <!-- Right: info + buy -->
+    <div>
+      <div class="text-xs text-gray-400 font-medium uppercase tracking-wide mb-1"><%= device.brand %></div>
+      <h1 class="text-3xl font-extrabold text-gray-900 mb-1"><%= device.name %></h1>
+
+      <!-- Rating -->
+      <div class="flex items-center gap-2 mb-4">
+        <div class="flex">
+          <% for(let i = 1; i <= 5; i++) { %>
+            <svg class="w-4 h-4 <%= i <= Math.round(device.rating) ? 'text-yellow-400' : 'text-gray-200' %>"
+              fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+            </svg>
+          <% } %>
+        </div>
+        <span class="text-sm text-gray-500"><%= device.rating %> · <%= device.reviews.toLocaleString() %> reviews</span>
+      </div>
+
+      <p class="text-gray-500 mb-6"><%= device.tagline %></p>
+
+      <!-- Price -->
+      <div class="bg-gray-50 rounded-2xl p-5 mb-6">
+        <% if (device.monthlyPrice) { %>
+          <div class="flex items-end gap-3 mb-1">
+            <div class="text-3xl font-extrabold text-nexus-600">$<%= device.monthlyPrice %>/mo</div>
+            <div class="text-gray-400 text-sm pb-1">for 24 months</div>
+          </div>
+          <div class="text-sm text-gray-500 mb-4">or $<%= device.price %> outright · 0% APR, no fees</div>
+        <% } else { %>
+          <div class="text-3xl font-extrabold text-nexus-600 mb-4">$<%= device.price %></div>
+        <% } %>
+        <a href="/checkout/plan" id="link-device-add-with-plan"
+          class="block w-full text-center bg-nexus-500 hover:bg-nexus-600 text-white font-bold py-3 rounded-xl transition mb-2">
+          Get This Device + Plan
+        </a>
+        <a href="/checkout/device" id="link-device-add-existing"
+          class="block w-full text-center bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-medium py-3 rounded-xl transition text-sm">
+          Add to Existing Plan
+        </a>
+      </div>
+
+      <!-- Key features -->
+      <div class="mb-6">
+        <h3 class="font-bold text-gray-900 mb-3">Key features</h3>
+        <ul class="space-y-2">
+          <% device.features.forEach(f => { %>
+            <li class="flex items-center gap-2 text-sm text-gray-600">
+              <svg class="w-4 h-4 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+              </svg>
+              <%= f %>
+            </li>
+          <% }) %>
+        </ul>
+      </div>
+
+      <!-- Perks -->
+      <div class="grid grid-cols-3 gap-3 text-center text-xs text-gray-500">
+        <div class="bg-gray-50 rounded-xl p-3">
+          <div class="text-lg mb-1">🚚</div>
+          <div class="font-medium">Free shipping</div>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <div class="text-lg mb-1">↩️</div>
+          <div class="font-medium">30-day returns</div>
+        </div>
+        <div class="bg-gray-50 rounded-xl p-3">
+          <div class="text-lg mb-1">🛡️</div>
+          <div class="font-medium">1-year warranty</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Specs accordion -->
+  <div class="mt-14">
+    <button onclick="toggleSpecs()" id="btn-specs-toggle"
+      class="w-full flex items-center justify-between bg-white border rounded-2xl px-6 py-4 font-bold text-gray-900 hover:bg-gray-50 transition">
+      Full Specifications
+      <svg id="specs-icon" class="w-5 h-5 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+      </svg>
+    </button>
+    <div id="specs-body" class="hidden bg-white border border-t-0 rounded-b-2xl px-6 pb-4">
+      <table class="w-full text-sm mt-2">
+        <% Object.entries(device.specs).forEach(([key, val]) => { %>
+          <tr class="border-b last:border-0">
+            <td class="py-3 text-gray-400 font-medium w-1/3"><%= key %></td>
+            <td class="py-3 text-gray-800"><%= val %></td>
+          </tr>
+        <% }) %>
+      </table>
+    </div>
+  </div>
+
+</div>
+
+<!-- You might also like -->
+<section class="bg-gray-50 border-t py-12 px-4">
+  <div class="max-w-5xl mx-auto">
+    <h2 class="text-xl font-bold text-gray-900 mb-6">You might also like</h2>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <a href="/devices" id="link-device-back-all" class="col-span-2 md:col-span-4 text-center text-nexus-500 hover:underline text-sm font-medium">
+        View all devices →
+      </a>
+    </div>
+  </div>
+</section>
+
+<script>
+  const colorBtns = document.querySelectorAll('[id^="btn-color-"]');
+
+  function selectColor(name) {
+    document.getElementById('selected-color').textContent = name;
+    colorBtns.forEach(btn => {
+      const isMatch = btn.title === name;
+      btn.classList.toggle('border-nexus-500', isMatch);
+      btn.classList.toggle('ring-2', isMatch);
+      btn.classList.toggle('ring-nexus-200', isMatch);
+      btn.classList.toggle('border-gray-200', !isMatch);
+    });
+  }
+
+  function selectStorage(name, btn) {
+    document.getElementById('selected-storage').textContent = name;
+    document.querySelectorAll('[onclick^="selectStorage"]').forEach(b => {
+      b.className = 'px-3 py-1.5 rounded-lg text-sm font-medium border transition border-gray-200 text-gray-600 hover:border-nexus-300';
+    });
+    btn.className = 'px-3 py-1.5 rounded-lg text-sm font-medium border transition border-nexus-500 text-nexus-600 bg-nexus-50';
+  }
+
+  function toggleSpecs() {
+    const body = document.getElementById('specs-body');
+    const icon = document.getElementById('specs-icon');
+    body.classList.toggle('hidden');
+    icon.style.transform = body.classList.contains('hidden') ? '' : 'rotate(180deg)';
+  }
+</script>
+
+<%- include('../partials/footer') %>
