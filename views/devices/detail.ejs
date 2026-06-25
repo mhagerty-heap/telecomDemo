@@ -98,11 +98,11 @@
         <% } else { %>
           <div class="text-3xl font-extrabold text-nexus-600 mb-4">$<%= device.price %></div>
         <% } %>
-        <a href="/checkout/plan" id="link-device-add-with-plan"
+        <a href="/checkout/plan?deviceId=<%= device.id %>" id="link-device-add-with-plan"
           class="block w-full text-center bg-nexus-500 hover:bg-nexus-600 text-white font-bold py-3 rounded-xl transition mb-2">
           Get This Device + Plan
         </a>
-        <a href="/checkout/device" id="link-device-add-existing"
+        <a href="/checkout/device?deviceId=<%= device.id %>" id="link-device-add-existing"
           class="block w-full text-center bg-white hover:bg-gray-100 border border-gray-200 text-gray-700 font-medium py-3 rounded-xl transition text-sm">
           Add to Existing Plan
         </a>

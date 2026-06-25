@@ -5,16 +5,26 @@ const devices = require('../data/devices.json');
 
 router.get('/plan', (req, res) => {
   const selectedPlanId = req.query.planId || req.session.checkout?.planId || '';
+  // Carry deviceId from PDP into session so it survives the plan step
+  if (req.query.deviceId) {
+    req.session.checkout = { ...req.session.checkout, deviceId: req.query.deviceId };
+  }
   res.render('checkout/plan', { title: 'Choose a Plan', activePage: null, plans, step: 1, selectedPlanId });
 });
 
 router.post('/plan', (req, res) => {
-  req.session.checkout = { planId: req.body.planId };
+  // Preserve deviceId if already set (e.g. came from PDP)
+  req.session.checkout = { deviceId: req.session.checkout?.deviceId || null, planId: req.body.planId };
   res.redirect('/checkout/device');
 });
 
 router.get('/device', (req, res) => {
-  res.render('checkout/device', { title: 'Choose a Device', activePage: null, devices, step: 2 });
+  // Accept deviceId from query param (PDP "Add to Existing Plan") or session
+  if (req.query.deviceId) {
+    req.session.checkout = { ...req.session.checkout, deviceId: req.query.deviceId };
+  }
+  const selectedDeviceId = req.session.checkout?.deviceId || '';
+  res.render('checkout/device', { title: 'Choose a Device', activePage: null, devices, step: 2, selectedDeviceId });
 });
 
 router.post('/device', (req, res) => {

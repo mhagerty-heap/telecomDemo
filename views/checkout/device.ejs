@@ -10,7 +10,7 @@
     <!-- BYOD option -->
     <label class="flex items-center gap-4 bg-white border-2 rounded-2xl p-5 mb-6 cursor-pointer hover:border-nexus-400 transition"
       id="card-byod">
-      <input type="radio" name="deviceId" value="" class="sr-only" onchange="selectDevice('byod')" checked>
+      <input type="radio" name="deviceId" value="" class="sr-only" onchange="selectDevice('byod')" <%= !selectedDeviceId ? 'checked' : '' %>>
       <div id="check-byod" class="w-6 h-6 rounded-full border-2 border-nexus-500 bg-nexus-500 flex items-center justify-center flex-shrink-0">
         <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
@@ -29,7 +29,7 @@
         <label class="plan-card cursor-pointer bg-white border-2 border-gray-200 rounded-2xl p-5 flex flex-col transition"
           id="card-<%= device.id %>">
           <input type="radio" name="deviceId" value="<%= device.id %>"
-            class="sr-only" onchange="selectDevice('<%= device.id %>')">
+            class="sr-only" onchange="selectDevice('<%= device.id %>')" <%= selectedDeviceId === device.id ? 'checked' : '' %>>
 
           <% if (device.badge) { %>
             <span class="bg-nexus-100 text-nexus-700 text-xs font-bold px-2 py-0.5 rounded-full self-start mb-3"><%= device.badge %></span>
@@ -100,8 +100,9 @@
     });
   }
 
-  // Init BYOD selected
-  selectDevice('byod');
+  // Pre-select device from session (PDP flow) or default to BYOD
+  const preselected = '<%= selectedDeviceId %>';
+  selectDevice(preselected || 'byod');
 </script>
 
 <%- include('../partials/footer') %>
