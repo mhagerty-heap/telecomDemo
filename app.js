@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
@@ -21,6 +22,7 @@ app.use(session({
 // Make session user available in all views
 app.use((req, res, next) => {
   res.locals.user = req.session.user || null;
+  res.locals.csqTagId = process.env.CSQ_TAG_ID || null;
   next();
 });
 
