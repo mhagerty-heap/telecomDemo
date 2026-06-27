@@ -173,11 +173,11 @@ print(f"[INIT] ============================================================")
 print(f"[BROWSER] Initialising Chrome...")
 options = webdriver.ChromeOptions()
 
-# Comment out to Run NON-Headless
-# options.add_argument("--headless")
-# options.add_argument("--no-sandbox")
-# options.add_argument("--disable-dev-shm-usage")
-# options.add_argument("--disable-gpu")
+# Uncomment to run non-headless (e.g. local debugging)
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--disable-dev-shm-usage")
+options.add_argument("--disable-gpu")
 
 options.add_argument(f"user-agent={userAgent}")
 options.add_argument("--incognito")
@@ -1164,7 +1164,7 @@ def path6_rage_bounce():
 # selectedPath = 3   # Checkout Abandoner
 # selectedPath = 4   # Deal/Promo Chaser
 # selectedPath = 5   # Frustrated Researcher
-selectedPath = 6   # Rage Bounce (Broken Campaign) — also set utmIndex = 6 above
+# selectedPath = 6   # Rage Bounce (Broken Campaign) — also set utmIndex = 6 above
 
 # ===========================================================================
 # MAIN
