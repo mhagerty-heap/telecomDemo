@@ -273,7 +273,11 @@ def slow_scroll_page(pause_at_fraction=None):
 
     while current < total_height:
         current += scroll_step
-        driver.execute_script(f"window.scrollTo({{top:{current},behavior:'smooth'}})")
+        try:
+            driver.execute_script(f"window.scrollTo({{top:{current},behavior:'smooth'}})")
+        except Exception as e:
+            print(f"[SCROLL] Session lost during scroll — exiting cleanly ({e})")
+            return
         time.sleep(random.uniform(0.12, 0.30))
         steps_since_drift += 1
 
@@ -743,7 +747,8 @@ def path2_device_first_converter():
     device_pdp_browse(device_id=prefDevice)
 
     print(f"[PATH2] Clicking 'Get This Device + Plan' CTA")
-    cta = wait_clickable("link-device-add-with-plan")
+    cta = wait_clickable("link-device-add-with-plan", timeout=20)
+    scroll_to(cta)
     hover_click(cta, wait_after=random.uniform(2.0, 4.0))
     print(f"[PATH2] CTA clicked — URL = {driver.current_url}")
 
