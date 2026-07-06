@@ -256,6 +256,69 @@ def hover_click(element, wait_after=None):
     element.click()
     time.sleep(wait_after if wait_after else random.uniform(1.5, 3.0))
 
+def blocked_click(element, label="element", block_prob=1.0):
+    """
+    Fires a real click on `element` so CS Zoning records it, but intercepts the
+    click in the capture phase with preventDefault()/stopPropagation() so it never
+    reaches the element's default action (navigation, form submit, etc).
+    Lets us paint click heatmap data across nav links, plan cards, and CTAs
+    without derailing the scripted journey the path is trying to simulate.
+    """
+    if random.random() >= block_prob:
+        return False
+    try:
+        driver.execute_script(
+            "var el = arguments[0];"
+            "el._csqBlockHandler = function(e){ e.preventDefault(); e.stopPropagation(); };"
+            "el.addEventListener('click', el._csqBlockHandler, true);",
+            element
+        )
+        ActionChains(driver, duration=random.randint(500, 900)).move_to_element(element).perform()
+        time.sleep(random.uniform(0.3, 0.6))
+        element.click()
+        time.sleep(random.uniform(0.4, 0.9))
+        driver.execute_script(
+            "var el = arguments[0];"
+            "if (el._csqBlockHandler) {"
+            "  el.removeEventListener('click', el._csqBlockHandler, true);"
+            "  delete el._csqBlockHandler;"
+            "}",
+            element
+        )
+        print(f"[BLOCKED-CLICK] Fired on {label} (CS zoning recorded, no navigation)")
+        return True
+    except Exception as ex:
+        print(f"[WARN] Blocked-click skipped on {label}: {ex}")
+        return False
+
+def simulate_nav_interactions():
+    """
+    Hover 2-4 random top-level nav links, with a 60% chance of a blocked click
+    on each — paints click zoning data across the nav bar without leaving the
+    page. Mirrors the ecomm site's nav dropdown zoning simulation, minus the
+    dropdown (this nav has none).
+    """
+    print(f"[NAV] Starting nav bar zoning simulation")
+    nav_ids = [
+        "link-nav-plans",
+        "link-nav-devices",
+        "link-nav-deals",
+        "link-nav-coverage",
+        "link-nav-support",
+    ]
+    targets = random.sample(nav_ids, k=random.randint(2, 4))
+    for nav_id in targets:
+        try:
+            el = driver.find_element(By.ID, nav_id)
+            scroll_to(el)
+            hover(el, dwell=random.uniform(0.8, 1.6))
+            print(f"[MOUSE] Hovered nav item: {nav_id}")
+            blocked_click(el, label=nav_id, block_prob=0.6)
+        except Exception:
+            print(f"[WARN] Nav item not found: {nav_id} — skipping")
+        time.sleep(random.uniform(0.3, 0.8))
+    print(f"[NAV] Nav bar zoning simulation complete")
+
 def slow_scroll_page(pause_at_fraction=None):
     """
     Smooth incremental scroll down the full page.
@@ -263,7 +326,11 @@ def slow_scroll_page(pause_at_fraction=None):
     shows a natural reading pattern rather than a static cursor.
     pause_at_fraction: 0.0–1.0 — pauses at that % of page height for a long dwell.
     """
-    total_height = driver.execute_script("return document.body.scrollHeight")
+    try:
+        total_height = driver.execute_script("return document.body.scrollHeight")
+    except Exception as e:
+        print(f"[SCROLL] Session lost before scroll started — skipping ({e})")
+        return
     scroll_step  = random.randint(250, 420)
     current      = 0
     paused       = False
@@ -362,10 +429,14 @@ def homepage_full_browse():
             el = wait_for(cta_id, timeout=5)
             hover(el, dwell=random.uniform(1.0, 2.0))
             print(f"[MOUSE] Hovered hero CTA: {cta_id}")
+            blocked_click(el, label=cta_id, block_prob=0.5)
         except Exception:
             pass
 
-    # Scroll to plan cards section, hover each card
+    # Nav bar zoning pass — hover/blocked-click a few top-level links
+    simulate_nav_interactions()
+
+    # Scroll to plan cards section, hover + blocked-click each card
     print(f"[PAGE] Scrolling to plan cards section")
     plan_card_ids = [
         "link-plan-choose-basic",
@@ -378,20 +449,32 @@ def homepage_full_browse():
             scroll_to(el)
             hover(el, dwell=random.uniform(1.5, 3.5))
             print(f"[MOUSE] Hovered plan card: {cid}")
+            blocked_click(el, label=cid, block_prob=0.55)
         except Exception:
             pass
+
+    # Compare-all-plans link — hover + blocked click
+    try:
+        compare = driver.find_element(By.ID, "link-home-compare-plans")
+        scroll_to(compare)
+        hover(compare, dwell=random.uniform(0.8, 1.5))
+        print(f"[MOUSE] Hovered compare-plans link")
+        blocked_click(compare, label="link-home-compare-plans", block_prob=0.4)
+    except Exception:
+        print(f"[WARN] Compare-plans link not found — skipping")
 
     time.sleep(random.uniform(1.0, 2.0))
 
     # Scroll rest of page — pause at 70% where promo banner lives
     slow_scroll_page(pause_at_fraction=0.70)
 
-    # Explicit hover on promo banner CTA — key Zoning element
+    # Explicit hover + blocked click on promo banner CTA — key Zoning element
     try:
         promo = wait_for("link-promo-banner-deals", timeout=5)
         scroll_to(promo)
         hover(promo, dwell=random.uniform(3.5, 6.0))
         print(f"[MOUSE] Hovered promo banner CTA (key Zoning element)")
+        blocked_click(promo, label="link-promo-banner-deals", block_prob=0.5)
     except Exception:
         print(f"[WARN] Promo banner not found — skipping hover")
 
@@ -502,8 +585,9 @@ def device_pdp_browse(device_id="iphone-16-pro"):
         print(f"[WARN] Specs toggle btn-specs-toggle not found")
 
     # Scroll back up to price/CTA box — long hover generates Zoning dwell signal
+    cta = None
     try:
-        cta = wait_for("link-device-add-with-plan", timeout=5)
+        cta = wait_clickable("link-device-add-with-plan", timeout=20)
         scroll_to(cta)
         dwell = random.uniform(4.0, 7.0)
         print(f"[MOUSE] Dwelling on device CTA box for {dwell:.1f}s (key Zoning zone)")
@@ -512,6 +596,7 @@ def device_pdp_browse(device_id="iphone-16-pro"):
         print(f"[WARN] Device CTA link-device-add-with-plan not found")
 
     print(f"[PAGE] device_pdp_browse() complete")
+    return cta
 
 
 def checkout_step1_plan(plan_id=None):
@@ -744,11 +829,12 @@ def path2_device_first_converter():
 
     homepage_full_browse()
     device_listing_browse()
-    device_pdp_browse(device_id=prefDevice)
+    cta = device_pdp_browse(device_id=prefDevice)
 
     print(f"[PATH2] Clicking 'Get This Device + Plan' CTA")
-    cta = wait_clickable("link-device-add-with-plan", timeout=20)
-    scroll_to(cta)
+    if cta is None:
+        cta = wait_clickable("link-device-add-with-plan", timeout=20)
+        scroll_to(cta)
     hover_click(cta, wait_after=random.uniform(2.0, 4.0))
     print(f"[PATH2] CTA clicked — URL = {driver.current_url}")
 
@@ -789,6 +875,9 @@ def path3_checkout_abandoner():
     time.sleep(random.uniform(2.0, 5.0))
     print(f"[PATH3] Homepage loaded — URL = {driver.current_url}")
     cs_identify()
+
+    # Nav bar zoning pass before heading to the hero CTA
+    simulate_nav_interactions()
 
     # Brief homepage read — click View Plans hero CTA
     time.sleep(random.uniform(1.5, 3.0))
@@ -847,6 +936,9 @@ def path4_promo_chaser():
     time.sleep(random.uniform(3.0, 5.0))
     print(f"[PATH4] Homepage loaded — URL = {driver.current_url}")
     cs_identify()
+
+    # Nav bar zoning pass before chasing the promo banner
+    simulate_nav_interactions()
 
     time.sleep(random.uniform(1.5, 3.0))
 
@@ -924,8 +1016,9 @@ def path5_frustrated_researcher():
     print(f"[PATH5] Homepage loaded — URL = {driver.current_url}")
     cs_identify()
 
-    # Homepage — slow scroll, no CTA clicks
-    print(f"[PATH5] Homepage — slow browse, no clicks")
+    # Homepage — slow scroll, no conversion CTA clicks (nav zoning pass only)
+    print(f"[PATH5] Homepage — slow browse, no conversion clicks")
+    simulate_nav_interactions()
     slow_scroll_page(pause_at_fraction=None)
     time.sleep(random.uniform(2.0, 4.0))
 
@@ -1240,7 +1333,10 @@ finally:
         print(f"[CLEANUP] localStorage and sessionStorage cleared")
     except Exception:
         pass
-    driver.delete_all_cookies()
-    print(f"[CLEANUP] Cookies deleted")
+    try:
+        driver.delete_all_cookies()
+        print(f"[CLEANUP] Cookies deleted")
+    except Exception:
+        print(f"[CLEANUP] Session already closed — skipping cookie delete")
     driver.quit()
     print(f"[CLEANUP] Browser closed — script complete")
