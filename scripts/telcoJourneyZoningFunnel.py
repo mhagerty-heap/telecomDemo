@@ -258,9 +258,12 @@ def hover_click(element, wait_after=None):
 
 def blocked_click(element, label="element", block_prob=1.0):
     """
-    Fires a real click on `element` so CS Zoning records it, but intercepts the
-    click in the capture phase with preventDefault()/stopPropagation() so it never
-    reaches the element's default action (navigation, form submit, etc).
+    Fires a real click on `element` so CS Zoning records it, but cancels the
+    element's default action (navigation, form submit, etc) with preventDefault().
+    Deliberately does NOT call stopPropagation() — CS instruments clicks via a
+    delegated listener on document, almost always in the bubble phase, and
+    stopPropagation() on the target would stop the event before it ever gets
+    there, silencing CS entirely even though the click "worked".
     Lets us paint click heatmap data across nav links, plan cards, and CTAs
     without derailing the scripted journey the path is trying to simulate.
     """
@@ -269,7 +272,7 @@ def blocked_click(element, label="element", block_prob=1.0):
     try:
         driver.execute_script(
             "var el = arguments[0];"
-            "el._csqBlockHandler = function(e){ e.preventDefault(); e.stopPropagation(); };"
+            "el._csqBlockHandler = function(e){ e.preventDefault(); };"
             "el.addEventListener('click', el._csqBlockHandler, true);",
             element
         )
