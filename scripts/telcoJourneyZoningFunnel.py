@@ -1,7 +1,7 @@
 """
 telcoJourneyZoningFunnel.py
 ---------------------------
-Synthetic traffic generator for Nexus Mobile (https://telecom-demo.vercel.app/).
+Synthetic traffic generator for Nexus Mobile (https://sc-demo-nexus-mobile.vercel.app/).
 Designed to populate Contentsquare Zoning, Journey Analysis, and Form Analytics
 with realistic, behaviorally diverse session data.
 
@@ -29,7 +29,7 @@ from selenium.webdriver.common.keys import Keys
 # Config
 # ---------------------------------------------------------------------------
 
-SITE_URL         = "https://telecom-demo.vercel.app"
+SITE_URL         = "https://sc-demo-nexus-mobile.vercel.app"
 USERS_JSON_PATH  = os.path.normpath(os.path.join(os.path.dirname(__file__), "../data/users.json"))
 CHROMEDRIVER_PATH = None  # e.g. "/usr/bin/chromedriver" — leave None if chromedriver is on PATH
 
