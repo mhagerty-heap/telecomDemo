@@ -43,4 +43,3 @@ app.listen(PORT, () => {
   console.log(`Nexus Mobile running at http://localhost:${PORT}`);
 });
 
-module.exports = app;
