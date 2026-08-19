@@ -30,7 +30,7 @@ from selenium.webdriver.common.keys import Keys
 # ---------------------------------------------------------------------------
 
 SITE_URL         = "https://sc-demo-nexus-mobile.vercel.app"
-USERS_JSON_PATH  = os.path.normpath(os.path.join(os.path.dirname(__file__), "../data/users.json"))
+USERS_JSON_PATH  = os.path.normpath(os.path.join(os.path.dirname(__file__), "users.json"))
 CHROMEDRIVER_PATH = None  # e.g. "/usr/bin/chromedriver" — leave None if chromedriver is on PATH
 
 # Path weights — must sum to 100

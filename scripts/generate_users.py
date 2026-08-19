@@ -2,7 +2,7 @@
 generate_users.py
 -----------------
 Generates 10,000 synthetic user profiles for the Nexus Mobile demo Selenium script.
-Output: ../data/users.json
+Output: users.json (same directory as this script)
 
 Run once (or whenever you need a fresh dataset):
     python3 generate_users.py
@@ -174,7 +174,7 @@ def main():
     print("Generating 10,000 user profiles...")
     profiles = [generate_profile(i) for i in range(10000)]
 
-    output_path = os.path.join(os.path.dirname(__file__), "../data/users.json")
+    output_path = os.path.join(os.path.dirname(__file__), "users.json")
     output_path = os.path.normpath(output_path)
 
     with open(output_path, "w") as f:
