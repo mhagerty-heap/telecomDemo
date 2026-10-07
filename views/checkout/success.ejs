@@ -55,4 +55,19 @@
 
 </div>
 
+<% if (order) { %>
+<script>
+  (function () {
+    var order = <%- JSON.stringify(order).replace(/</g, '\\u003c') %>;
+    try {
+      // Avoid double-counting on page reload
+      if (sessionStorage.getItem('csqTx') === order.id) return;
+      sessionStorage.setItem('csqTx', order.id);
+    } catch (e) {}
+    window._uxa = window._uxa || [];
+    window._uxa.push(['trackTransaction', { id: order.id, revenue: order.revenue, currency: order.currency }]);
+  })();
+</script>
+<% } %>
+
 <%- include('../partials/footer') %>

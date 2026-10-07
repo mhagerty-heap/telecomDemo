@@ -67,12 +67,21 @@ router.get('/confirm', (req, res) => {
 });
 
 router.post('/confirm', (req, res) => {
+  const cart = req.session.checkout || {};
+  const plan = plans.find(p => p.id === cart.planId) || null;
+  const device = cart.deviceId ? devices.find(d => d.id === cart.deviceId) : null;
+  const revenue = (plan ? plan.price : 0) + (device && device.monthlyPrice ? device.monthlyPrice : 0);
+  req.session.lastOrder = {
+    id: 'NXS-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase(),
+    revenue: Number(revenue.toFixed(2)),
+    currency: 'USD'
+  };
   req.session.checkout = {};
   res.redirect('/checkout/success');
 });
 
 router.get('/success', (req, res) => {
-  res.render('checkout/success', { title: 'Order Confirmed', activePage: null });
+  res.render('checkout/success', { title: 'Order Confirmed', activePage: null, order: req.session.lastOrder || null });
 });
 
 module.exports = router;
