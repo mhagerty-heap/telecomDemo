@@ -6,7 +6,7 @@
   <!-- Welcome bar -->
   <div class="flex items-center justify-between mb-8">
     <div>
-      <h1 class="text-2xl font-extrabold text-gray-900">Welcome back, <%= account.name.split(' ')[0] %></h1>
+      <h1 class="text-2xl font-extrabold text-gray-900 break-all">Welcome back, <%= user.email %></h1>
       <p class="text-gray-400 text-sm mt-0.5">Account #<%= account.accountId %></p>
     </div>
     <% if (!account.billing.autopay) { %>
