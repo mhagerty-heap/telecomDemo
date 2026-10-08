@@ -71,10 +71,21 @@ router.post('/confirm', (req, res) => {
   const plan = plans.find(p => p.id === cart.planId) || null;
   const device = cart.deviceId ? devices.find(d => d.id === cart.deviceId) : null;
   const revenue = (plan ? plan.price : 0) + (device && device.monthlyPrice ? device.monthlyPrice : 0);
+  // Line items for analytics; price is the recurring monthly amount so the
+  // items sum to `revenue`.
+  const items = [];
+  if (plan) items.push({ name: plan.name + ' Plan', sku: plan.id, category: 'Plan', price: plan.price, quantity: 1 });
+  if (device) items.push({
+    name: device.name, sku: device.id, category: 'Device',
+    price: device.monthlyPrice || 0, quantity: 1
+  });
   req.session.lastOrder = {
     id: 'NXS-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2, 5).toUpperCase(),
     revenue: Number(revenue.toFixed(2)),
-    currency: 'USD'
+    currency: 'USD',
+    email: cart.customer?.email || req.session.user?.email || null,
+    date: new Date().toISOString(),
+    items
   };
   req.session.checkout = {};
   res.redirect('/checkout/success');

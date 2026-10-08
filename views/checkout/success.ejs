@@ -57,16 +57,80 @@
 
 <% if (order) { %>
 <script>
-  (function () {
-    var order = <%- JSON.stringify(order).replace(/</g, '\\u003c') %>;
-    try {
-      // Avoid double-counting on page reload
-      if (sessionStorage.getItem('csqTx') === order.id) return;
-      sessionStorage.setItem('csqTx', order.id);
-    } catch (e) {}
+(function () {
+  // Order data injected server-side; no DOM scraping.
+  var order = <%- JSON.stringify(order).replace(/</g, '\\u003c') %>;
+  var revenue = Number(order.revenue).toFixed(2);
+
+  // Deduplication: prevents double-firing on page refresh
+  var SESSION_KEY = 'nexus_order_tracked';
+  var tracked = [];
+  try {
+    var stored = sessionStorage.getItem(SESSION_KEY);
+    tracked = stored ? stored.split(',') : [];
+  } catch (e) {}
+  if (tracked.indexOf(order.id) !== -1) return;
+
+  try {
+    // Route through _uxa: it queues and replays, and afterPageView guarantees
+    // the tag has fully bootstrapped before these calls run.
     window._uxa = window._uxa || [];
-    window._uxa.push(['trackTransaction', { id: order.id, revenue: order.revenue, currency: order.currency }]);
-  })();
+    window._uxa.push(['afterPageView', function (context) {
+      if (context.pageViewType !== 'n') return; // skip artificial/renewal pageviews
+
+      if (order.email) window._uxa.push(['identify', order.email]);
+
+      window._uxa.push(['trackEvent', {
+        name: 'Order Placed',
+        properties: {
+          'Order Number': order.id,
+          'Order Total': revenue,
+          'Order Date': new Date(order.date).toLocaleDateString(),
+          'Order Item Count': order.items.length,
+          'Order Item Names': order.items.map(function (i) { return i.name; }).join(', ')
+        }
+      }]);
+
+      order.items.forEach(function (item) {
+        window._uxa.push(['trackEvent', {
+          name: 'Product Purchased',
+          properties: {
+            'Order Number': order.id,
+            'Product Name': item.name,
+            'Product SKU': item.sku,
+            'Product Category': item.category,
+            'Product Price': Number(item.price).toFixed(2),
+            'Product Quantity': item.quantity
+          }
+        }]);
+      });
+
+      // Contentsquare e-commerce transaction
+      window._uxa.push(['ec:transaction:create', {
+        id: order.id,
+        revenue: revenue,
+        currency: order.currency
+      }]);
+      order.items.forEach(function (item) {
+        window._uxa.push(['ec:transaction:items:add', {
+          id: order.id,
+          name: item.name,
+          sku: item.sku,
+          category: item.category,
+          price: Number(item.price).toFixed(2),
+          quantity: item.quantity
+        }]);
+      });
+      window._uxa.push(['ec:transaction:send']);
+
+      // Mark tracked only once the calls have actually been queued
+      tracked.push(order.id);
+      try { sessionStorage.setItem(SESSION_KEY, tracked.join(',')); } catch (e) {}
+    }]);
+  } catch (e) {
+    console.error('Nexus tracking error:', e);
+  }
+})();
 </script>
 <% } %>
 
