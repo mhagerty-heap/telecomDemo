@@ -2,9 +2,6 @@ const express = require('express');
 const router = express.Router();
 const user = require('../data/user.json');
 
-const DEMO_EMAIL = 'demo@nexusmobile.com';
-const DEMO_PASSWORD = 'demo123';
-
 router.get('/login', (req, res) => {
   if (req.session.user) return res.redirect('/account');
   res.render('login', {
@@ -15,20 +12,22 @@ router.get('/login', (req, res) => {
   });
 });
 
+// Demo login: any well-formed email signs in (the email is the analytics
+// identity); the password is ignored. Profile data comes from user.json.
 router.post('/login', (req, res) => {
-  const { email, password } = req.body;
-  if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
-    req.session.user = { name: user.name, email: user.email, accountId: user.accountId };
-    const returnTo = req.session.returnTo || '/account';
-    delete req.session.returnTo;
-    return res.redirect(returnTo);
+  const email = (req.body.email || '').trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return res.render('login', {
+      title: 'Log In',
+      activePage: 'login',
+      error: 'Please enter a valid email address.',
+      email
+    });
   }
-  res.render('login', {
-    title: 'Log In',
-    activePage: 'login',
-    error: 'Incorrect email or password. Please try again.',
-    email
-  });
+  req.session.user = { name: user.name, email, accountId: user.accountId };
+  const returnTo = req.session.returnTo || '/account';
+  delete req.session.returnTo;
+  res.redirect(returnTo);
 });
 
 router.get('/logout', (req, res) => {
