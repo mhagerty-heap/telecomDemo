@@ -35,7 +35,9 @@ router.get('/devices', (req, res) => {
 });
 
 router.get('/profile', (req, res) => {
-  res.render('account/profile', { title: 'Profile & Settings', activePage: 'profile', account: userData, saved: req.query.saved === 'true' });
+  // Show the email the visitor logged in with, not the static demo profile's
+  const account = { ...userData, email: req.session.user.email };
+  res.render('account/profile', { title: 'Profile & Settings', activePage: 'profile', account, saved: req.query.saved === 'true' });
 });
 
 router.post('/profile', (req, res) => {
